@@ -3,924 +3,1191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>サブスク整理帖</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<title>お願いします</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1a1a;
-    --ink-light: #4a4a4a;
-    --ink-faint: #8a8a8a;
-    --paper: #f5f0e8;
-    --paper-warm: #ede7d9;
-    --accent: #8b4513;
-    --accent-light: #c4956a;
-    --accent-pale: #f0e0cc;
-    --line: #d4c9b5;
-    --red: #c0392b;
-    --green: #2d6a4f;
-    --blue: #1a4a7a;
-    --shadow: rgba(90,60,20,0.12);
-  }
+:root {
+  --bg: #0f0e0c;
+  --bg2: #1a1815;
+  --bg3: #242220;
+  --border: #333128;
+  --border-light: #3d3a33;
+  --text: #e8e2d6;
+  --text-dim: #8a8478;
+  --text-faint: #4a4740;
+  --gold: #c9a96e;
+  --gold-light: #e8c98a;
+  --gold-pale: #2a2318;
+  --red: #c0392b;
+  --red-pale: #2a1210;
+  --amber: #d4890a;
+  --amber-pale: #261e08;
+  --green: #4a9068;
+  --green-pale: #0d1f16;
+  --blue: #4a78a0;
+  --blue-pale: #0d1a26;
+  --purple: #7a5aa0;
+  --purple-pale: #1a1226;
+  --shadow: rgba(0,0,0,0.6);
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-  }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
 
-  /* ── HEADER ── */
-  header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 28px 24px 22px;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 60px,
-      rgba(255,255,255,0.03) 60px,
-      rgba(255,255,255,0.03) 61px
-    );
-  }
-  .header-inner { position: relative; max-width: 860px; margin: 0 auto; }
-  .header-kana {
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--accent-light);
-    margin-bottom: 6px;
-    font-family: 'Noto Serif JP', serif;
-  }
-  h1 {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 28px;
-    font-weight: 300;
-    letter-spacing: 0.15em;
-    line-height: 1;
-  }
-  .header-sub {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--ink-faint);
-    letter-spacing: 0.1em;
-  }
-  .header-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 18px;
-    flex-wrap: wrap;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: 2px;
-    font-size: 12px;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    border: none;
-    letter-spacing: 0.05em;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
-  .btn-primary:hover { background: #a0522d; }
-  .btn-ghost {
-    background: transparent;
-    color: var(--paper);
-    border: 1px solid rgba(255,255,255,0.25);
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.6); }
-  .btn-sm {
-    padding: 5px 12px;
-    font-size: 11px;
-  }
-  .btn-danger { background: var(--red); color: white; }
-  .btn-danger:hover { background: #a93226; }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--line);
-    color: var(--ink-light);
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+}
+.header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 56px;
+}
+.logo {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 17px;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+.logo span { font-size: 10px; color: var(--text-dim); display: block; letter-spacing: 0.15em; margin-top: 1px; }
+.header-progress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.progress-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+.progress-text {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.header-btns {
+  display: flex;
+  gap: 8px;
+}
+.hbtn {
+  padding: 5px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  background: var(--bg2);
+  color: var(--text-dim);
+  font-family: 'Noto Sans JP', sans-serif;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.hbtn:hover { border-color: var(--gold); color: var(--gold); }
+.hbtn-gold {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  font-weight: 500;
+}
+.hbtn-gold:hover { background: var(--gold-light); border-color: var(--gold-light); color: var(--bg); }
 
-  /* ── LEGACY NOTICE ── */
-  .legacy-notice {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1a4a33 100%);
-    color: white;
-    padding: 12px 24px;
-    font-size: 11px;
-    text-align: center;
-    letter-spacing: 0.08em;
-  }
+/* ── TABS ── */
+.tabs-wrap {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-wrap::-webkit-scrollbar { display: none; }
+.tabs {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  padding: 0 20px;
+}
+.tab {
+  padding: 12px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.05em;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 9px;
+  background: var(--bg3);
+  color: var(--text-dim);
+}
+.tab.active .tab-badge { background: var(--gold-pale); color: var(--gold); }
 
-  /* ── MAIN ── */
-  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+/* ── MAIN ── */
+main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 
-  /* ── SUMMARY BAR ── */
-  .summary-bar {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  .summary-card {
-    flex: 1;
-    min-width: 120px;
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 14px 18px;
-    text-align: center;
-  }
-  .summary-card .num {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .summary-card .label {
-    font-size: 10px;
-    color: var(--ink-faint);
-    margin-top: 3px;
-    letter-spacing: 0.08em;
-  }
+/* ── DASHBOARD ── */
+.dashboard { display: none; }
+.dashboard.active { display: block; }
+.dash-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.dash-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.dash-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.dash-card.cat-0::before { background: var(--gold); }
+.dash-card.cat-1::before { background: var(--red); }
+.dash-card.cat-2::before { background: var(--amber); }
+.dash-card.cat-3::before { background: var(--blue); }
+.dash-card.cat-4::before { background: var(--purple); }
+.dash-card:hover { border-color: var(--border-light); transform: translateY(-1px); }
+.dash-card-icon { font-size: 22px; margin-bottom: 10px; }
+.dash-card-name { font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 8px; }
+.dash-card-count { font-family: 'Shippori Mincho', serif; font-size: 28px; color: var(--text); }
+.dash-card-sub { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+.dash-urgency {
+  margin-bottom: 28px;
+}
+.urgency-title {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.urgency-list { display: flex; flex-direction: column; gap: 6px; }
+.urgency-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.urgency-item:hover { border-color: var(--border-light); }
+.urgency-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.urgency-dot.high { background: var(--red); }
+.urgency-dot.mid { background: var(--amber); }
+.urgency-name { flex: 1; }
+.urgency-cat { font-size: 10px; color: var(--text-faint); }
 
-  /* ── FILTER ── */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .filter-label {
-    font-size: 11px;
-    color: var(--ink-faint);
-    letter-spacing: 0.08em;
-    margin-right: 4px;
-  }
-  .filter-chip {
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    background: white;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .filter-chip.active {
-    background: var(--ink);
-    color: white;
-    border-color: var(--ink);
-  }
+/* ── CATEGORY PANEL ── */
+.cat-panel { display: none; }
+.cat-panel.active { display: block; }
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.cat-icon-lg { font-size: 28px; }
+.cat-header-text h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--gold);
+}
+.cat-header-text p { font-size: 11px; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.06em; }
+.add-task-btn {
+  margin-left: auto;
+  padding: 8px 18px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.05em;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.add-task-btn:hover { background: var(--gold-light); }
 
-  /* ── GRID ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
+/* ── TASK ITEM ── */
+.tasks-list { display: flex; flex-direction: column; gap: 10px; }
+.task-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.task-item:hover { border-color: var(--border-light); }
+.task-item.done { opacity: 0.5; }
+.task-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+.task-check {
+  width: 20px; height: 20px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.task-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.task-check.checked::after { content: '✓'; color: white; font-size: 12px; }
+.task-body { flex: 1; min-width: 0; }
+.task-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.task-name.done-text { text-decoration: line-through; color: var(--text-dim); }
+.priority-dot {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+.p-high { background: var(--red-pale); color: var(--red); border: 1px solid #5a1a15; }
+.p-mid { background: var(--amber-pale); color: var(--amber); border: 1px solid #5a3808; }
+.p-low { background: var(--green-pale); color: var(--green); border: 1px solid #1a4028; }
+.task-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.task-meta span { display: flex; align-items: center; gap: 4px; }
+.task-expand-btn {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-faint);
+  font-size: 10px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.task-expand-btn:hover { border-color: var(--gold); color: var(--gold); }
+.task-detail {
+  display: none;
+  padding: 0 16px 14px 48px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.task-detail.open { display: block; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.detail-block { background: var(--bg3); border-radius: 4px; padding: 10px 12px; }
+.detail-label { font-size: 10px; color: var(--text-faint); letter-spacing: 0.08em; margin-bottom: 5px; }
+.detail-value { font-size: 12px; color: var(--text); white-space: pre-wrap; line-height: 1.6; }
+.detail-memo {
+  background: var(--bg3);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.detail-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.det-btn {
+  padding: 5px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-dim);
+}
+.det-btn:hover { border-color: var(--gold); color: var(--gold); }
+.det-btn-del { border-color: #5a1a15; color: var(--red); }
+.det-btn-del:hover { background: var(--red-pale); }
 
-  /* ── CARD ── */
-  .sub-card {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    overflow: hidden;
-    transition: box-shadow 0.2s;
-    position: relative;
-  }
-  .sub-card:hover { box-shadow: 0 4px 20px var(--shadow); }
+/* ── EMPTY ── */
+.empty-cat {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-faint);
+}
+.empty-cat-icon { font-size: 36px; margin-bottom: 14px; }
+.empty-cat p { font-size: 13px; }
 
-  .card-header {
-    padding: 14px 16px 10px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .service-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-    background: var(--paper-warm);
-  }
-  .card-title-area { flex: 1; min-width: 0; }
-  .card-service-name {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 15px;
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .card-category {
-    font-size: 10px;
-    color: var(--ink-faint);
-    margin-top: 2px;
-    letter-spacing: 0.06em;
-  }
-  .priority-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 9px;
-    letter-spacing: 0.06em;
-    flex-shrink: 0;
-  }
-  .priority-high { background: #fdecea; color: var(--red); border: 1px solid #f5c6cb; }
-  .priority-mid { background: #fff8e1; color: #b8860b; border: 1px solid #ffe082; }
-  .priority-low { background: #e8f5e9; color: var(--green); border: 1px solid #a5d6a7; }
+/* ── MODAL ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 28px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.modal-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18px;
+  color: var(--gold);
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.form-grid { display: grid; gap: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fg { display: flex; flex-direction: column; gap: 5px; }
+.fg label { font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; }
+.fg input, .fg select, .fg textarea {
+  background: var(--bg3);
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus {
+  border-color: var(--gold);
+}
+.fg select option { background: var(--bg3); }
+.fg textarea { resize: vertical; min-height: 80px; }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.mbtn {
+  padding: 8px 20px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  border: none;
+}
+.mbtn-cancel { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+.mbtn-cancel:hover { border-color: var(--border-light); color: var(--text); }
+.mbtn-save { background: var(--gold); color: var(--bg); font-weight: 500; }
+.mbtn-save:hover { background: var(--gold-light); }
+.mbtn-del { background: var(--red-pale); color: var(--red); border: 1px solid #5a1a15; margin-right: auto; }
+.mbtn-del:hover { background: #3a1510; }
 
-  .card-body { padding: 12px 16px; }
+/* ── GUIDE BOX ── */
+.guide-box {
+  background: var(--bg2);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.guide-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--gold-pale);
+  border-bottom: 1px solid var(--border);
+}
+.guide-icon { font-size: 26px; }
+.guide-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16px;
+  color: var(--gold);
+}
+.guide-sub { font-size: 10px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.08em; }
+.guide-body { padding: 20px; }
+.guide-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.guide-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+.guide-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.guide-step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.guide-step-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+.guide-step-text strong { color: var(--text); font-size: 13px; }
+.guide-note {
+  background: var(--red-pale);
+  border: 1px solid #5a1a15;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #e08070;
+  line-height: 1.7;
+}
 
-  .card-info-row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 6px;
-    font-size: 12px;
-  }
-  .card-info-label {
-    color: var(--ink-faint);
-    font-size: 10px;
-    min-width: 56px;
-    letter-spacing: 0.04em;
-  }
-  .card-info-value { color: var(--ink-light); }
-  .amount-value {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 15px;
-    color: var(--ink);
-  }
+/* ── GUIDE BOX ── */
+.import-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--bg2);
+  border: 1px dashed var(--border-light);
+  border-radius: 6px;
+  text-align: center;
+}
+.import-section p { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
 
-  .card-memo {
-    margin-top: 8px;
-    padding: 8px 10px;
-    background: var(--paper);
-    border-radius: 3px;
-    font-size: 11px;
-    color: var(--ink-light);
-    border-left: 2px solid var(--accent-light);
-    line-height: 1.6;
-    white-space: pre-wrap;
-  }
+/* ── PRINT ── */
+@media print {
+  header, .tabs-wrap, .header-btns,
+  .add-task-btn, .task-expand-btn,
+  .detail-actions, .dash-card,
+  .cat-panel:not(.active) { display: none !important; }
+  body { background: white; color: black; }
+  .cat-panel.active { display: block !important; }
+  .task-item.done { display: none !important; }
+  .task-detail { display: block !important; }
+  .task-item { border: 1px solid #ccc; margin-bottom: 10px; break-inside: avoid; }
+  .task-main { background: white; }
+  .task-check { border-color: #999; background: white; }
+  .task-check.checked::after { display: none; }
+  .task-detail { background: #f9f9f9; }
+  .detail-block, .detail-memo { background: #f5f5f5; }
+  .detail-label { color: #666; }
+  .detail-value, .detail-memo { color: #333; }
+  .task-name { color: black !important; }
+  .task-meta { color: #666; }
+  .cat-header h2 { color: #333; }
+  .print-header { display: block !important; }
+}
+.print-header {
+  display: none;
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #333;
+  margin-bottom: 20px;
+}
 
-  .card-footer {
-    padding: 10px 16px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .qr-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 12px;
-    background: var(--blue);
-    color: white;
-    border: none;
-    border-radius: 3px;
-    font-size: 11px;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    letter-spacing: 0.04em;
-    transition: background 0.15s;
-  }
-  .qr-btn:hover { background: #1a3a6a; }
-  .action-link {
-    flex: 1;
-    font-size: 11px;
-    color: var(--blue);
-    text-decoration: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .action-link:hover { text-decoration: underline; }
-  .card-edit-btn {
-    padding: 5px 10px;
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    font-size: 10px;
-    cursor: pointer;
-    color: var(--ink-faint);
-    font-family: 'Noto Sans JP', sans-serif;
-    transition: all 0.15s;
-  }
-  .card-edit-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── QR MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: white;
-    border-radius: 6px;
-    padding: 28px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-  }
-  .modal-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 18px;
-    margin-bottom: 6px;
-  }
-  .modal-sub {
-    font-size: 11px;
-    color: var(--ink-faint);
-    margin-bottom: 20px;
-  }
-  #qr-container { display: flex; justify-content: center; margin-bottom: 16px; }
-  .modal-url {
-    font-size: 10px;
-    color: var(--ink-faint);
-    word-break: break-all;
-    margin-bottom: 16px;
-    padding: 8px;
-    background: var(--paper);
-    border-radius: 3px;
-  }
-  .modal-steps {
-    text-align: left;
-    background: var(--paper);
-    border-radius: 4px;
-    padding: 14px 16px;
-    margin-bottom: 18px;
-  }
-  .modal-steps-title {
-    font-size: 11px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    letter-spacing: 0.06em;
-  }
-  .modal-steps ol { padding-left: 16px; }
-  .modal-steps li { font-size: 11px; color: var(--ink-light); margin-bottom: 4px; line-height: 1.6; }
-  .modal-password-hint {
-    font-size: 11px;
-    color: var(--red);
-    background: #fdecea;
-    padding: 8px 12px;
-    border-radius: 3px;
-    margin-bottom: 18px;
-    text-align: left;
-  }
-
-  /* ── FORM MODAL ── */
-  .form-modal {
-    background: white;
-    border-radius: 6px;
-    padding: 28px;
-    max-width: 520px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .form-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 18px;
-    margin-bottom: 24px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--line);
-  }
-  .form-grid { display: grid; gap: 16px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group label { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-family: 'Noto Sans JP', sans-serif;
-    color: var(--ink);
-    background: var(--paper);
-    transition: border-color 0.15s;
-    outline: none;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus { border-color: var(--accent); background: white; }
-  .form-group textarea { resize: vertical; min-height: 70px; }
-  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--ink-faint);
-  }
-  .empty-state-icon { font-size: 40px; margin-bottom: 16px; }
-  .empty-state p { font-size: 13px; }
-
-  /* ── PRINT ── */
-  @media print {
-    header, .legacy-notice, .summary-bar,
-    .filter-bar, .header-actions, .card-footer,
-    .modal-overlay { display: none !important; }
-    body { background: white; }
-    .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .sub-card { break-inside: avoid; border: 1px solid #999; }
-    main { padding: 10px; }
-    .print-header { display: block !important; }
-  }
-  .print-header {
-    display: none;
-    text-align: center;
-    padding: 20px 0 16px;
-    border-bottom: 2px solid #333;
-    margin-bottom: 20px;
-  }
-  .print-header h2 { font-size: 20px; }
-  .print-header p { font-size: 11px; color: #666; margin-top: 4px; }
-
-  /* ── UPDATED DATE ── */
-  .updated-label {
-    font-size: 10px;
-    color: var(--ink-faint);
-    text-align: right;
-    margin-bottom: 16px;
-    letter-spacing: 0.06em;
-  }
-
-  @media (max-width: 480px) {
-    h1 { font-size: 22px; }
-    .form-row { grid-template-columns: 1fr; }
-    .cards-grid { grid-template-columns: 1fr; }
-  }
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .header-inner { gap: 10px; }
+  .logo span { display: none; }
+  .tab { padding: 10px 14px; font-size: 11px; }
+}
 </style>
 </head>
 <body>
 
 <div class="print-header">
-  <h2>サブスクリプション一覧</h2>
-  <p id="print-date"></p>
-  <p style="margin-top:6px;font-size:11px;color:#c00;">※ ID・パスワードは別紙「デジタル情報保管ノート」をご確認ください</p>
+  <h2>お願いします</h2>
+  <p id="print-date-top"></p>
+  <p style="margin-top:4px;font-size:11px;color:#c00;">※ ID・パスワード・印鑑の場所は別紙「デジタル情報保管ノート」を確認してください</p>
 </div>
 
 <header>
   <div class="header-inner">
-    <div class="header-kana">サブスクせいりちょう</div>
-    <h1>サブスク整理帖</h1>
-    <div class="header-sub">契約中のサービス管理 ／ 解約手順ガイド</div>
-    <div class="header-actions">
-      <button class="btn btn-primary" onclick="openAddForm()">＋ サービスを追加</button>
-      <button class="btn btn-ghost" onclick="window.print()">🖨 印刷する</button>
-      <button class="btn btn-ghost" onclick="exportData()">↓ データを保存</button>
-      <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">↑ データを読込</button>
-      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <div class="logo">
+      お願いします
+      <span>ONEGAISHIMASU</span>
+    </div>
+    <div class="header-progress">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0 / 0 完了</div>
+    </div>
+    <div class="header-btns">
+      <button class="hbtn" onclick="window.print()">🖨 印刷</button>
+      <button class="hbtn" onclick="exportAll()">↓ 保存</button>
+      <button class="hbtn" onclick="document.getElementById('import-all').click()">↑ 読込</button>
+      <input type="file" id="import-all" accept=".json" style="display:none" onchange="importAll(event)">
     </div>
   </div>
 </header>
 
-<div class="legacy-notice">
-  🔐 ID・パスワードはこのアプリに保存しません。別紙「デジタル情報保管ノート」と照合してください。
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('dash', this)">
+      <span>📊</span> 全体概要
+    </div>
+    <div class="tab" onclick="switchTab('cat0', this)">
+      <span>💳</span> 契約・サブスク
+      <span class="tab-badge" id="badge-cat0">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('cat1', this)">
+      <span>🏢</span> 法人・事業
+      <span class="tab-badge" id="badge-cat1">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('cat2', this)">
+      <span>📦</span> 備品・返却
+      <span class="tab-badge" id="badge-cat2">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('cat3', this)">
+      <span>🏦</span> 金融・保険
+      <span class="tab-badge" id="badge-cat3">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('cat4', this)">
+      <span>🌐</span> デジタル資産
+      <span class="tab-badge" id="badge-cat4">0</span>
+    </div>
+  </div>
 </div>
 
 <main>
-  <div class="updated-label" id="updated-label"></div>
+  <!-- DASHBOARD -->
+  <div class="dashboard active" id="panel-dash">
+    <div class="dash-title">OVERVIEW — 全体の進捗</div>
 
-  <div class="summary-bar">
-    <div class="summary-card">
-      <div class="num" id="total-count">0</div>
-      <div class="label">登録件数</div>
+    <!-- 概要・使い方 -->
+    <div class="guide-box">
+      <div class="guide-header">
+        <span class="guide-icon">📖</span>
+        <div>
+          <div class="guide-title">このアプリについて</div>
+          <div class="guide-sub">はじめにお読みください</div>
+        </div>
+      </div>
+      <div class="guide-body">
+        <p class="guide-desc">このアプリは、手続きや連絡が必要なことをまとめた「引き継ぎノート」です。<br>あわてず、一つひとつ確認しながら進めてください。</p>
+        <div class="guide-steps">
+          <div class="guide-step">
+            <div class="guide-step-num">1</div>
+            <div class="guide-step-text">
+              <strong>タブで分野を選ぶ</strong><br>
+              上のタブ（契約・法人・備品・金融・デジタル）から対応したい分野を選んでください。
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">2</div>
+            <div class="guide-step-text">
+              <strong>タスクをタップして詳細を確認する</strong><br>
+              各項目をタップすると、手順・連絡先・注意事項が表示されます。連絡先のURLや電話番号はそのままタップして使えます。
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">3</div>
+            <div class="guide-step-text">
+              <strong>完了したらチェックを入れる</strong><br>
+              左のチェックボックスをタップすると完了になります。この画面の進捗バーに自動で反映されます。
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">4</div>
+            <div class="guide-step-text">
+              <strong>ID・パスワードは別紙を確認</strong><br>
+              ログインが必要な手続きは「デジタル情報保管ノート（別紙）」にまとめてあります。
+            </div>
+          </div>
+        </div>
+        <div class="guide-note">
+          🔴 優先度「高」のタスクから順に対応いただけると助かります。急ぎでないものは後回しで構いません。
+        </div>
+      </div>
     </div>
-    <div class="summary-card">
-      <div class="num" id="monthly-total">¥0</div>
-      <div class="label">月額合計（概算）</div>
+    <div class="dash-grid">
+      <div class="dash-card cat-0" onclick="switchTabById(0)">
+        <div class="dash-card-icon">💳</div>
+        <div class="dash-card-name">契約・サブスク</div>
+        <div class="dash-card-count" id="dc0">0</div>
+        <div class="dash-card-sub" id="dc0-done">未完了 0件</div>
+      </div>
+      <div class="dash-card cat-1" onclick="switchTabById(1)">
+        <div class="dash-card-icon">🏢</div>
+        <div class="dash-card-name">法人・事業</div>
+        <div class="dash-card-count" id="dc1">0</div>
+        <div class="dash-card-sub" id="dc1-done">未完了 0件</div>
+      </div>
+      <div class="dash-card cat-2" onclick="switchTabById(2)">
+        <div class="dash-card-icon">📦</div>
+        <div class="dash-card-name">備品・返却</div>
+        <div class="dash-card-count" id="dc2">0</div>
+        <div class="dash-card-sub" id="dc2-done">未完了 0件</div>
+      </div>
+      <div class="dash-card cat-3" onclick="switchTabById(3)">
+        <div class="dash-card-icon">🏦</div>
+        <div class="dash-card-name">金融・保険</div>
+        <div class="dash-card-count" id="dc3">0</div>
+        <div class="dash-card-sub" id="dc3-done">未完了 0件</div>
+      </div>
+      <div class="dash-card cat-4" onclick="switchTabById(4)">
+        <div class="dash-card-icon">🌐</div>
+        <div class="dash-card-name">デジタル資産</div>
+        <div class="dash-card-count" id="dc4">0</div>
+        <div class="dash-card-sub" id="dc4-done">未完了 0件</div>
+      </div>
     </div>
-    <div class="summary-card">
-      <div class="num" id="high-priority-count">0</div>
-      <div class="label">要注意（高）</div>
+
+    <div class="dash-urgency">
+      <div class="urgency-title">🔴 優先度「高」の未完了タスク</div>
+      <div class="urgency-list" id="urgency-list">
+        <div style="font-size:12px;color:var(--text-faint);padding:10px 0;">登録されていません</div>
+      </div>
     </div>
-    <div class="summary-card">
-      <div class="num" id="annual-total">¥0</div>
-      <div class="label">年間概算</div>
+
+    <div class="import-section">
+      <p>「サブスク整理帖」のJSONファイルを読み込んで、<br>契約・サブスクカテゴリに自動インポートできます</p>
+      <button class="hbtn" onclick="document.getElementById('import-subs').click()">📥 サブスク整理帖を取込む</button>
+      <input type="file" id="import-subs" accept=".json" style="display:none" onchange="importSubs(event)">
     </div>
   </div>
 
-  <div class="filter-bar">
-    <span class="filter-label">絞り込み：</span>
-    <button class="filter-chip active" onclick="filterCards('all', this)">すべて</button>
-    <button class="filter-chip" onclick="filterCards('高', this)">🔴 優先度：高</button>
-    <button class="filter-chip" onclick="filterCards('中', this)">🟡 優先度：中</button>
-    <button class="filter-chip" onclick="filterCards('低', this)">🟢 優先度：低</button>
+  <!-- CAT PANELS -->
+  <div class="cat-panel" id="panel-cat0">
+    <div class="cat-header">
+      <div class="cat-icon-lg">💳</div>
+      <div class="cat-header-text">
+        <h2>契約・サブスク</h2>
+        <p>各種サービス・定期契約の解約・停止手続き</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddTask(0)">＋ 追加</button>
+    </div>
+    <div class="tasks-list" id="list-cat0"></div>
+    <div class="empty-cat" id="empty-cat0" style="display:none">
+      <div class="empty-cat-icon">💳</div>
+      <p>まだ登録がありません</p>
+    </div>
   </div>
 
-  <div class="cards-grid" id="cards-grid">
-    <div class="empty-state" id="empty-state">
-      <div class="empty-state-icon">📋</div>
-      <p>サービスがまだ登録されていません</p>
-      <p style="margin-top:8px;">「＋ サービスを追加」から登録してください</p>
+  <div class="cat-panel" id="panel-cat1">
+    <div class="cat-header">
+      <div class="cat-icon-lg">🏢</div>
+      <div class="cat-header-text">
+        <h2>法人・事業</h2>
+        <p>H.P.canvas株式会社の解散・清算、取引先への連絡</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddTask(1)">＋ 追加</button>
+    </div>
+    <div class="tasks-list" id="list-cat1"></div>
+    <div class="empty-cat" id="empty-cat1" style="display:none">
+      <div class="empty-cat-icon">🏢</div>
+      <p>まだ登録がありません</p>
+    </div>
+  </div>
+
+  <div class="cat-panel" id="panel-cat2">
+    <div class="cat-header">
+      <div class="cat-icon-lg">📦</div>
+      <div class="cat-header-text">
+        <h2>備品・返却</h2>
+        <p>レンタル備品の返却、預かり物の整理</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddTask(2)">＋ 追加</button>
+    </div>
+    <div class="tasks-list" id="list-cat2"></div>
+    <div class="empty-cat" id="empty-cat2" style="display:none">
+      <div class="empty-cat-icon">📦</div>
+      <p>まだ登録がありません</p>
+    </div>
+  </div>
+
+  <div class="cat-panel" id="panel-cat3">
+    <div class="cat-header">
+      <div class="cat-icon-lg">🏦</div>
+      <div class="cat-header-text">
+        <h2>金融・保険</h2>
+        <p>銀行口座・生命保険・クレジットカードの手続き</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddTask(3)">＋ 追加</button>
+    </div>
+    <div class="tasks-list" id="list-cat3"></div>
+    <div class="empty-cat" id="empty-cat3" style="display:none">
+      <div class="empty-cat-icon">🏦</div>
+      <p>まだ登録がありません</p>
+    </div>
+  </div>
+
+  <div class="cat-panel" id="panel-cat4">
+    <div class="cat-header">
+      <div class="cat-icon-lg">🌐</div>
+      <div class="cat-header-text">
+        <h2>デジタル資産</h2>
+        <p>SNS・ドメイン・GitHubアカウント等の処理</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddTask(4)">＋ 追加</button>
+    </div>
+    <div class="tasks-list" id="list-cat4"></div>
+    <div class="empty-cat" id="empty-cat4" style="display:none">
+      <div class="empty-cat-icon">🌐</div>
+      <p>まだ登録がありません</p>
     </div>
   </div>
 </main>
 
-<!-- QR Modal -->
-<div class="modal-overlay" id="qr-modal">
+<!-- Task Form Modal -->
+<div class="overlay" id="task-modal">
   <div class="modal">
-    <div class="modal-title" id="qr-service-name"></div>
-    <div class="modal-sub">QRコードを読み取って解約ページへ</div>
-    <div id="qr-container"></div>
-    <div class="modal-url" id="qr-url-display"></div>
-    <div class="modal-steps" id="qr-steps">
-      <div class="modal-steps-title">📋 解約手順</div>
-      <ol id="steps-list"></ol>
-    </div>
-    <div class="modal-password-hint" id="qr-pass-hint"></div>
-    <div style="display:flex;gap:10px;justify-content:center;">
-      <a id="qr-direct-link" href="#" target="_blank" class="btn btn-primary btn-sm">🌐 ページを開く</a>
-      <button class="btn btn-outline btn-sm" onclick="closeQrModal()">閉じる</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add/Edit Form Modal -->
-<div class="modal-overlay" id="form-modal">
-  <div class="form-modal">
-    <div class="form-title" id="form-title">サービスを追加</div>
+    <div class="modal-title" id="modal-title">タスクを追加</div>
     <div class="form-grid">
-      <div class="form-row">
-        <div class="form-group">
-          <label>サービス名 *</label>
-          <input type="text" id="f-name" placeholder="例：Netflix">
-        </div>
-        <div class="form-group">
-          <label>カテゴリ</label>
-          <select id="f-category">
-            <option>動画配信</option>
-            <option>音楽</option>
-            <option>ゲーム</option>
-            <option>クラウド・ストレージ</option>
-            <option>ソフトウェア</option>
-            <option>ニュース・雑誌</option>
-            <option>ショッピング</option>
-            <option>健康・美容</option>
-            <option>その他</option>
-          </select>
-        </div>
+      <div class="fg">
+        <label>タスク名・件名 *</label>
+        <input type="text" id="f-task-name" placeholder="例：Netflix 解約">
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>月額料金（円）</label>
-          <input type="number" id="f-amount" placeholder="例：1490">
-        </div>
-        <div class="form-group">
-          <label>支払い周期</label>
-          <select id="f-cycle">
-            <option value="monthly">月払い</option>
-            <option value="annual">年払い</option>
-            <option value="other">その他</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>支払い手段</label>
-          <input type="text" id="f-payment" placeholder="例：楽天カード末尾1234">
-        </div>
-        <div class="form-group">
-          <label>優先度（解約急ぎ度）</label>
+        <div class="fg">
+          <label>優先度</label>
           <select id="f-priority">
-            <option value="高">高 ― 有料・すぐ止める</option>
-            <option value="中">中 ― 確認してから決める</option>
-            <option value="低">低 ― 残してもよい</option>
+            <option value="高">高 — すぐに対応が必要</option>
+            <option value="中">中 — 1ヶ月以内に対応</option>
+            <option value="低">低 — 時間的余裕あり</option>
           </select>
         </div>
+        <div class="fg">
+          <label>期限の目安</label>
+          <input type="text" id="f-deadline" placeholder="例：死後2週間以内">
+        </div>
       </div>
-      <div class="form-group">
-        <label>解約ページURL</label>
-        <input type="url" id="f-url" placeholder="https://...">
+      <div class="fg">
+        <label>連絡先（担当窓口・電話番号・URL）</label>
+        <input type="text" id="f-contact" placeholder="例：0120-XXX-XXX / https://...">
       </div>
-      <div class="form-group">
-        <label>ログインID（メールアドレス等）のヒント ※パスワード不要</label>
-        <input type="text" id="f-id-hint" placeholder="例：メインのGmailアドレス">
+      <div class="fg">
+        <label>IDヒント（パスワードは記載しない）</label>
+        <input type="text" id="f-idhint" placeholder="例：メインのGmailアドレス">
       </div>
-      <div class="form-group">
-        <label>解約手順メモ</label>
-        <textarea id="f-steps" placeholder="例：①ログイン後「アカウント」→②「メンバーシップの解約」をタップ"></textarea>
+      <div class="fg">
+        <label>手順メモ</label>
+        <textarea id="f-steps" placeholder="例：①電話で死亡を申告&#10;②死亡診断書のコピーを郵送&#10;③解約完了の通知を受け取る"></textarea>
       </div>
-      <div class="form-group">
-        <label>備考・注意点</label>
-        <textarea id="f-memo" placeholder="例：年払いのため○月まで有効。解約しても期間中は使える。" style="min-height:55px;"></textarea>
+      <div class="fg">
+        <label>備考・注意事項</label>
+        <textarea id="f-memo" placeholder="例：書類は引き出し右上の茶封筒に入っている" style="min-height:60px;"></textarea>
       </div>
     </div>
-    <div class="form-actions">
-      <button class="btn btn-danger btn-sm" id="delete-btn" style="display:none;margin-right:auto;" onclick="deleteCurrentCard()">削除</button>
-      <button class="btn btn-outline btn-sm" onclick="closeFormModal()">キャンセル</button>
-      <button class="btn btn-primary btn-sm" onclick="saveCard()">保存する</button>
+    <div class="modal-actions">
+      <button class="mbtn mbtn-del" id="modal-del-btn" style="display:none" onclick="deleteTask()">削除</button>
+      <button class="mbtn mbtn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="mbtn mbtn-save" onclick="saveTask()">保存する</button>
     </div>
   </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'shukatsu_subs_v1';
-let subs = [];
+const STORE = 'ending_note_v1';
+let data = { tasks: [] };
 let editingId = null;
-let currentFilter = 'all';
+let editingCat = 0;
 
-const CATEGORY_ICONS = {
-  '動画配信': '🎬', '音楽': '🎵', 'ゲーム': '🎮',
-  'クラウド・ストレージ': '☁️', 'ソフトウェア': '💻',
-  'ニュース・雑誌': '📰', 'ショッピング': '🛒',
-  '健康・美容': '💊', 'その他': '📦'
-};
+const CAT_NAMES = ['契約・サブスク','法人・事業','備品・返却','金融・保険','デジタル資産'];
 
 function load() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    subs = raw ? JSON.parse(raw) : [];
-  } catch(e) { subs = []; }
+    const raw = localStorage.getItem(STORE);
+    if (raw) data = JSON.parse(raw);
+    if (!data.tasks) data.tasks = [];
+  } catch(e) { data = { tasks: [] }; }
 }
 function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(subs));
-  localStorage.setItem(STORAGE_KEY + '_updated', new Date().toISOString());
-  updateUpdatedLabel();
+  localStorage.setItem(STORE, JSON.stringify(data));
+  localStorage.setItem(STORE + '_upd', new Date().toISOString());
 }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-
-function updateUpdatedLabel() {
-  const d = localStorage.getItem(STORAGE_KEY + '_updated');
-  const el = document.getElementById('updated-label');
-  if (d) {
-    const dt = new Date(d);
-    el.textContent = '最終更新：' + dt.toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
-  } else {
-    el.textContent = '';
-  }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function updateSummary() {
-  const total = subs.length;
-  let monthly = 0;
-  subs.forEach(s => {
-    const amt = parseFloat(s.amount) || 0;
-    if (s.cycle === 'annual') monthly += amt / 12;
-    else if (s.cycle === 'monthly') monthly += amt;
-  });
-  const high = subs.filter(s => s.priority === '高').length;
-  document.getElementById('total-count').textContent = total;
-  document.getElementById('monthly-total').textContent = '¥' + Math.round(monthly).toLocaleString();
-  document.getElementById('annual-total').textContent = '¥' + Math.round(monthly * 12).toLocaleString();
-  document.getElementById('high-priority-count').textContent = high;
+// ── TABS ──
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dashboard,.cat-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+function switchTabById(catIdx) {
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dashboard,.cat-panel').forEach(p => p.classList.remove('active'));
+  tabs[catIdx + 1].classList.add('active');
+  document.getElementById('panel-cat' + catIdx).classList.add('active');
 }
 
-function renderCards() {
-  const grid = document.getElementById('cards-grid');
-  const empty = document.getElementById('empty-state');
-  grid.innerHTML = '';
-  let filtered = currentFilter === 'all' ? subs : subs.filter(s => s.priority === currentFilter);
-  if (filtered.length === 0) {
-    grid.appendChild(empty);
+// ── RENDER ──
+function renderAll() {
+  for (let c = 0; c < 5; c++) renderCat(c);
+  renderDashboard();
+  renderProgress();
+}
+
+function renderCat(c) {
+  const list = document.getElementById('list-cat' + c);
+  const empty = document.getElementById('empty-cat' + c);
+  const tasks = data.tasks.filter(t => t.cat === c);
+  list.innerHTML = '';
+  if (tasks.length === 0) {
     empty.style.display = '';
     return;
   }
   empty.style.display = 'none';
-  filtered.forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'sub-card';
-    card.dataset.id = s.id;
 
-    const priorityClass = s.priority === '高' ? 'priority-high' : s.priority === '中' ? 'priority-mid' : 'priority-low';
-    const priorityLabel = s.priority === '高' ? '🔴 優先：高' : s.priority === '中' ? '🟡 優先：中' : '🟢 優先：低';
-    const icon = CATEGORY_ICONS[s.category] || '📦';
-    const amtDisplay = s.amount ? '¥' + parseFloat(s.amount).toLocaleString() + (s.cycle === 'monthly' ? '/月' : s.cycle === 'annual' ? '/年' : '') : '—';
-    const memoHtml = s.memo ? `<div class="card-memo">${escHtml(s.memo)}</div>` : '';
-    const idHintHtml = s.idHint ? `<div class="card-info-row"><span class="card-info-label">IDヒント</span><span class="card-info-value">${escHtml(s.idHint)}</span></div>` : '';
+  // sort: high priority first, then undone first
+  tasks.sort((a,b) => {
+    const po = {高:0,中:1,低:2};
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (po[a.priority]||1) - (po[b.priority]||1);
+  });
 
-    card.innerHTML = `
-      <div class="card-header">
-        <div class="service-icon">${icon}</div>
-        <div class="card-title-area">
-          <div class="card-service-name">${escHtml(s.name)}</div>
-          <div class="card-category">${escHtml(s.category)}</div>
+  tasks.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'task-item' + (t.done ? ' done' : '');
+    item.id = 'task-' + t.id;
+    const pClass = t.priority === '高' ? 'p-high' : t.priority === '中' ? 'p-mid' : 'p-low';
+    const detailHtml = buildDetailHtml(t);
+    item.innerHTML = `
+      <div class="task-main" onclick="toggleDetail('${t.id}')">
+        <div class="task-check ${t.done ? 'checked' : ''}" onclick="event.stopPropagation();toggleDone('${t.id}')"></div>
+        <div class="task-body">
+          <div class="task-name ${t.done ? 'done-text' : ''}">
+            ${esc(t.name)}
+            <span class="priority-dot ${pClass}">${esc(t.priority)}</span>
+          </div>
+          <div class="task-meta">
+            ${t.deadline ? `<span>⏱ ${esc(t.deadline)}</span>` : ''}
+            ${t.contact ? `<span>📞 ${esc(t.contact.slice(0,30))}${t.contact.length>30?'…':''}</span>` : ''}
+          </div>
         </div>
-        <span class="priority-badge ${priorityClass}">${priorityLabel}</span>
+        <button class="task-expand-btn" onclick="event.stopPropagation();toggleDetail('${t.id}')">詳細 ▾</button>
       </div>
-      <div class="card-body">
-        <div class="card-info-row">
-          <span class="card-info-label">料金</span>
-          <span class="amount-value">${amtDisplay}</span>
+      <div class="task-detail" id="detail-${t.id}">
+        ${detailHtml}
+        <div class="detail-actions">
+          <button class="det-btn det-btn-del" onclick="openEditTask('${t.id}')">✏ 編集</button>
         </div>
-        <div class="card-info-row">
-          <span class="card-info-label">支払い</span>
-          <span class="card-info-value">${escHtml(s.payment || '—')}</span>
-        </div>
-        ${idHintHtml}
-        ${memoHtml}
-      </div>
-      <div class="card-footer">
-        ${s.cancelUrl ? `<button class="qr-btn" onclick="openQrModal('${s.id}')">📱 QR表示</button>
-        <a class="action-link" href="${escHtml(s.cancelUrl)}" target="_blank">${escHtml(s.cancelUrl)}</a>` : '<span style="font-size:11px;color:#aaa;">解約URLが未設定</span>'}
-        <button class="card-edit-btn" onclick="openEditForm('${s.id}')">編集</button>
       </div>
     `;
-    grid.appendChild(card);
-  });
-}
-
-function escHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Filter ──
-function filterCards(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderCards();
-}
-
-// ── QR Modal ──
-function openQrModal(id) {
-  const s = subs.find(x => x.id === id);
-  if (!s || !s.cancelUrl) return;
-  document.getElementById('qr-service-name').textContent = s.name;
-  document.getElementById('qr-url-display').textContent = s.cancelUrl;
-  document.getElementById('qr-direct-link').href = s.cancelUrl;
-
-  const container = document.getElementById('qr-container');
-  container.innerHTML = '';
-  new QRCode(container, { text: s.cancelUrl, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
-
-  const stepsEl = document.getElementById('steps-list');
-  stepsEl.innerHTML = '';
-  const stepsText = s.steps || '手順は未登録です。編集から追加してください。';
-  stepsText.split('\n').filter(l => l.trim()).forEach(line => {
-    const li = document.createElement('li');
-    li.textContent = line;
-    stepsEl.appendChild(li);
+    list.appendChild(item);
   });
 
-  const hint = document.getElementById('qr-pass-hint');
-  if (s.idHint) {
-    hint.innerHTML = `🔑 IDヒント：<strong>${escHtml(s.idHint)}</strong><br>パスワードは別紙「デジタル情報保管ノート」を確認してください`;
-    hint.style.display = '';
-  } else {
-    hint.style.display = 'none';
+  const badge = document.getElementById('badge-cat' + c);
+  badge.textContent = tasks.filter(t => !t.done).length;
+}
+
+function linkify(text) {
+  if (!text) return '';
+  return esc(text)
+    .replace(
+      /(https?:\/\/[^\s&lt;&gt;"]+)/g,
+      '<a href="$1" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;word-break:break-all;">$1</a>'
+    )
+    .replace(
+      /([\d０-９]{2,4}[-−ー－][\d０-９]{2,4}[-−ー－][\d０-９]{3,4}|0120[-−ー－][\d０-９]{3,6}[-−ー－][\d０-９]{3,6}|(0\d{9,10}))/g,
+      (match) => {
+        const tel = match.replace(/[－ー−]/g, '-').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+        return `<a href="tel:${tel}" style="color:var(--gold);text-decoration:underline;">${match}</a>`;
+      }
+    );
+}
+
+function buildDetailHtml(t) {
+  let html = '<div class="detail-grid">';
+  if (t.contact) html += `<div class="detail-block"><div class="detail-label">連絡先 / URL</div><div class="detail-value">${linkify(t.contact)}</div></div>`;
+  if (t.idHint) html += `<div class="detail-block"><div class="detail-label">IDヒント</div><div class="detail-value">${esc(t.idHint)}</div></div>`;
+  if (t.deadline) html += `<div class="detail-block"><div class="detail-label">期限の目安</div><div class="detail-value">${esc(t.deadline)}</div></div>`;
+  html += '</div>';
+  if (t.steps) html += `<div class="detail-memo"><strong style="font-size:10px;color:var(--text-faint);display:block;margin-bottom:6px;">📋 手順</strong>${esc(t.steps)}</div>`;
+  if (t.memo) html += `<div class="detail-memo" style="border-color:var(--text-faint)"><strong style="font-size:10px;color:var(--text-faint);display:block;margin-bottom:6px;">📝 備考</strong>${esc(t.memo)}</div>`;
+  return html;
+}
+
+function renderDashboard() {
+  for (let c = 0; c < 5; c++) {
+    const tasks = data.tasks.filter(t => t.cat === c);
+    const undone = tasks.filter(t => !t.done).length;
+    document.getElementById('dc' + c).textContent = tasks.length;
+    document.getElementById('dc' + c + '-done').textContent = `未完了 ${undone}件`;
   }
-
-  document.getElementById('qr-modal').classList.add('open');
-}
-function closeQrModal() {
-  document.getElementById('qr-modal').classList.remove('open');
-  document.getElementById('qr-container').innerHTML = '';
-}
-
-// ── Form Modal ──
-function openAddForm() {
-  editingId = null;
-  document.getElementById('form-title').textContent = 'サービスを追加';
-  document.getElementById('delete-btn').style.display = 'none';
-  ['f-name','f-amount','f-url','f-id-hint','f-steps','f-memo','f-payment'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.value = '';
+  const highUndone = data.tasks.filter(t => t.priority === '高' && !t.done);
+  const ul = document.getElementById('urgency-list');
+  ul.innerHTML = '';
+  if (highUndone.length === 0) {
+    ul.innerHTML = '<div style="font-size:12px;color:var(--text-faint);padding:10px 0;">優先度「高」の未完了タスクはありません</div>';
+    return;
+  }
+  highUndone.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'urgency-item';
+    el.onclick = () => { switchTabById(t.cat); setTimeout(() => toggleDetail(t.id), 100); };
+    el.innerHTML = `
+      <div class="urgency-dot high"></div>
+      <div class="urgency-name">${esc(t.name)}</div>
+      <div class="urgency-cat">${CAT_NAMES[t.cat]}</div>
+    `;
+    ul.appendChild(el);
   });
-  document.getElementById('f-category').value = '動画配信';
-  document.getElementById('f-cycle').value = 'monthly';
+}
+
+function renderProgress() {
+  const total = data.tasks.length;
+  const done = data.tasks.filter(t => t.done).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done} / ${total} 完了`;
+}
+
+// ── ACTIONS ──
+function toggleDetail(id) {
+  const el = document.getElementById('detail-' + id);
+  if (el) el.classList.toggle('open');
+}
+function toggleDone(id) {
+  const t = data.tasks.find(x => x.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  save();
+  renderAll();
+}
+
+// ── FORM ──
+function openAddTask(cat) {
+  editingId = null;
+  editingCat = cat;
+  document.getElementById('modal-title').textContent = CAT_NAMES[cat] + ' — 追加';
+  document.getElementById('modal-del-btn').style.display = 'none';
+  ['f-task-name','f-deadline','f-contact','f-idhint','f-steps','f-memo'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
   document.getElementById('f-priority').value = '高';
-  document.getElementById('form-modal').classList.add('open');
+  document.getElementById('task-modal').classList.add('open');
 }
-function openEditForm(id) {
-  const s = subs.find(x => x.id === id);
-  if (!s) return;
+function openEditTask(id) {
+  const t = data.tasks.find(x => x.id === id);
+  if (!t) return;
   editingId = id;
-  document.getElementById('form-title').textContent = 'サービスを編集';
-  document.getElementById('delete-btn').style.display = '';
-  document.getElementById('f-name').value = s.name || '';
-  document.getElementById('f-category').value = s.category || 'その他';
-  document.getElementById('f-amount').value = s.amount || '';
-  document.getElementById('f-cycle').value = s.cycle || 'monthly';
-  document.getElementById('f-payment').value = s.payment || '';
-  document.getElementById('f-priority').value = s.priority || '高';
-  document.getElementById('f-url').value = s.cancelUrl || '';
-  document.getElementById('f-id-hint').value = s.idHint || '';
-  document.getElementById('f-steps').value = s.steps || '';
-  document.getElementById('f-memo').value = s.memo || '';
-  document.getElementById('form-modal').classList.add('open');
+  editingCat = t.cat;
+  document.getElementById('modal-title').textContent = '編集';
+  document.getElementById('modal-del-btn').style.display = '';
+  document.getElementById('f-task-name').value = t.name || '';
+  document.getElementById('f-priority').value = t.priority || '高';
+  document.getElementById('f-deadline').value = t.deadline || '';
+  document.getElementById('f-contact').value = t.contact || '';
+  document.getElementById('f-idhint').value = t.idHint || '';
+  document.getElementById('f-steps').value = t.steps || '';
+  document.getElementById('f-memo').value = t.memo || '';
+  document.getElementById('task-modal').classList.add('open');
 }
-function closeFormModal() {
-  document.getElementById('form-modal').classList.remove('open');
+function closeModal() {
+  document.getElementById('task-modal').classList.remove('open');
   editingId = null;
 }
-function saveCard() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { alert('サービス名を入力してください'); return; }
-  const data = {
+function saveTask() {
+  const name = document.getElementById('f-task-name').value.trim();
+  if (!name) { alert('タスク名を入力してください'); return; }
+  const taskData = {
     name,
-    category: document.getElementById('f-category').value,
-    amount: document.getElementById('f-amount').value,
-    cycle: document.getElementById('f-cycle').value,
-    payment: document.getElementById('f-payment').value.trim(),
+    cat: editingCat,
     priority: document.getElementById('f-priority').value,
-    cancelUrl: document.getElementById('f-url').value.trim(),
-    idHint: document.getElementById('f-id-hint').value.trim(),
+    deadline: document.getElementById('f-deadline').value.trim(),
+    contact: document.getElementById('f-contact').value.trim(),
+    idHint: document.getElementById('f-idhint').value.trim(),
     steps: document.getElementById('f-steps').value.trim(),
     memo: document.getElementById('f-memo').value.trim(),
+    done: false,
   };
   if (editingId) {
-    const idx = subs.findIndex(x => x.id === editingId);
-    if (idx >= 0) subs[idx] = { ...subs[idx], ...data };
+    const idx = data.tasks.findIndex(x => x.id === editingId);
+    if (idx >= 0) { taskData.done = data.tasks[idx].done; data.tasks[idx] = { id: editingId, ...taskData }; }
   } else {
-    subs.push({ id: uid(), ...data });
+    data.tasks.push({ id: uid(), ...taskData });
   }
   save();
-  renderCards();
-  updateSummary();
-  closeFormModal();
+  renderAll();
+  closeModal();
 }
-function deleteCurrentCard() {
+function deleteTask() {
   if (!editingId) return;
-  if (!confirm('このサービスを削除しますか？')) return;
-  subs = subs.filter(x => x.id !== editingId);
+  if (!confirm('このタスクを削除しますか？')) return;
+  data.tasks = data.tasks.filter(x => x.id !== editingId);
   save();
-  renderCards();
-  updateSummary();
-  closeFormModal();
+  renderAll();
+  closeModal();
 }
 
-// ── Export / Import ──
-function exportData() {
-  const json = JSON.stringify(subs, null, 2);
-  const blob = new Blob([json], {type: 'application/json'});
+// ── EXPORT / IMPORT ──
+function exportAll() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'subscriptions_' + new Date().toISOString().slice(0,10) + '.json';
+  a.download = 'ending_note_' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
 }
-function importData(event) {
+function importAll(event) {
   const file = event.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
+  const r = new FileReader();
+  r.onload = e => {
     try {
       const imported = JSON.parse(e.target.result);
-      if (!Array.isArray(imported)) throw new Error('形式エラー');
-      if (!confirm(`${imported.length}件のデータを読み込みます。現在のデータは上書きされます。よろしいですか？`)) return;
-      subs = imported;
+      if (!imported.tasks) throw new Error();
+      if (!confirm(`${imported.tasks.length}件を読み込みます。現在のデータは上書きされます。`)) return;
+      data = imported;
       save();
-      renderCards();
-      updateSummary();
+      renderAll();
       alert('読み込みが完了しました。');
-    } catch(err) {
-      alert('ファイルの読み込みに失敗しました。正しいJSONファイルを選択してください。');
-    }
+    } catch { alert('ファイルの読み込みに失敗しました。'); }
   };
-  reader.readAsText(file);
+  r.readAsText(file);
   event.target.value = '';
 }
 
-// ── Close on overlay click ──
-document.getElementById('qr-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeQrModal();
-});
-document.getElementById('form-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeFormModal();
+// サブスク整理帖JSONからインポート
+function importSubs(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const subs = JSON.parse(e.target.result);
+      if (!Array.isArray(subs)) throw new Error();
+      const tasks = subs.map(s => ({
+        id: uid(),
+        cat: 0,
+        name: s.name + '　解約',
+        priority: s.priority === '高' ? '高' : s.priority === '中' ? '中' : '低',
+        deadline: '',
+        contact: s.cancelUrl || '',
+        idHint: s.idHint || '',
+        steps: s.steps || '',
+        memo: [s.payment ? '支払い：' + s.payment : '', s.memo || ''].filter(Boolean).join('\n'),
+        done: false,
+      }));
+      if (!confirm(`サブスク整理帖から ${tasks.length} 件を「契約・サブスク」に追加します。`)) return;
+      data.tasks.push(...tasks);
+      save();
+      renderAll();
+      alert('取込みが完了しました。');
+    } catch { alert('ファイルの読み込みに失敗しました。'); }
+  };
+  r.readAsText(file);
+  event.target.value = '';
+}
+
+// ── OVERLAY CLOSE ──
+document.getElementById('task-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
 });
 
-// ── Print date ──
-document.getElementById('print-date').textContent =
+// ── PRINT DATE ──
+document.getElementById('print-date-top').textContent =
   '印刷日：' + new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric'});
 
-// ── Init ──
+// ── INIT ──
 load();
-updateUpdatedLabel();
-updateSummary();
-renderCards();
+renderAll();
 </script>
 </body>
 </html>
