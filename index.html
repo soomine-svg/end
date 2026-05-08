@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サブスク整理帖</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-light: #4a4a4a;
+    --ink-faint: #8a8a8a;
+    --paper: #f5f0e8;
+    --paper-warm: #ede7d9;
+    --accent: #8b4513;
+    --accent-light: #c4956a;
+    --accent-pale: #f0e0cc;
+    --line: #d4c9b5;
+    --red: #c0392b;
+    --green: #2d6a4f;
+    --blue: #1a4a7a;
+    --shadow: rgba(90,60,20,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 24px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.03) 60px,
+      rgba(255,255,255,0.03) 61px
+    );
+  }
+  .header-inner { position: relative; max-width: 860px; margin: 0 auto; }
+  .header-kana {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--accent-light);
+    margin-bottom: 6px;
+    font-family: 'Noto Serif JP', serif;
+  }
+  h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    line-height: 1;
+  }
+  .header-sub {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    border: none;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: #a0522d; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.6); }
+  .btn-sm {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+  .btn-danger { background: var(--red); color: white; }
+  .btn-danger:hover { background: #a93226; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-light);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── LEGACY NOTICE ── */
+  .legacy-notice {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1a4a33 100%);
+    color: white;
+    padding: 12px 24px;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── MAIN ── */
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* ── SUMMARY BAR ── */
+  .summary-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .summary-card {
+    flex: 1;
+    min-width: 120px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 18px;
+    text-align: center;
+  }
+  .summary-card .num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .summary-card .label {
+    font-size: 10px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── FILTER ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+  .filter-chip {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .filter-chip.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  /* ── GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── CARD ── */
+  .sub-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .sub-card:hover { box-shadow: 0 4px 20px var(--shadow); }
+
+  .card-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .service-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: var(--paper-warm);
+  }
+  .card-title-area { flex: 1; min-width: 0; }
+  .card-service-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-category {
+    font-size: 10px;
+    color: var(--ink-faint);
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+  .priority-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .priority-high { background: #fdecea; color: var(--red); border: 1px solid #f5c6cb; }
+  .priority-mid { background: #fff8e1; color: #b8860b; border: 1px solid #ffe082; }
+  .priority-low { background: #e8f5e9; color: var(--green); border: 1px solid #a5d6a7; }
+
+  .card-body { padding: 12px 16px; }
+
+  .card-info-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  .card-info-label {
+    color: var(--ink-faint);
+    font-size: 10px;
+    min-width: 56px;
+    letter-spacing: 0.04em;
+  }
+  .card-info-value { color: var(--ink-light); }
+  .amount-value {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .card-memo {
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--paper);
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--ink-light);
+    border-left: 2px solid var(--accent-light);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .card-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .qr-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+  .qr-btn:hover { background: #1a3a6a; }
+  .action-link {
+    flex: 1;
+    font-size: 11px;
+    color: var(--blue);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .action-link:hover { text-decoration: underline; }
+  .card-edit-btn {
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.15s;
+  }
+  .card-edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── QR MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 6px;
+    padding: 28px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  .modal-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+  }
+  #qr-container { display: flex; justify-content: center; margin-bottom: 16px; }
+  .modal-url {
+    font-size: 10px;
+    color: var(--ink-faint);
+    word-break: break-all;
+    margin-bottom: 16px;
+    padding: 8px;
+    background: var(--paper);
+    border-radius: 3px;
+  }
+  .modal-steps {
+    text-align: left;
+    background: var(--paper);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .modal-steps-title {
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+  .modal-steps ol { padding-left: 16px; }
+  .modal-steps li { font-size: 11px; color: var(--ink-light); margin-bottom: 4px; line-height: 1.6; }
+  .modal-password-hint {
+    font-size: 11px;
+    color: var(--red);
+    background: #fdecea;
+    padding: 8px 12px;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    text-align: left;
+  }
+
+  /* ── FORM MODAL ── */
+  .form-modal {
+    background: white;
+    border-radius: 6px;
+    padding: 28px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .form-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-grid { display: grid; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); background: white; }
+  .form-group textarea { resize: vertical; min-height: 70px; }
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-faint);
+  }
+  .empty-state-icon { font-size: 40px; margin-bottom: 16px; }
+  .empty-state p { font-size: 13px; }
+
+  /* ── PRINT ── */
+  @media print {
+    header, .legacy-notice, .summary-bar,
+    .filter-bar, .header-actions, .card-footer,
+    .modal-overlay { display: none !important; }
+    body { background: white; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .sub-card { break-inside: avoid; border: 1px solid #999; }
+    main { padding: 10px; }
+    .print-header { display: block !important; }
+  }
+  .print-header {
+    display: none;
+    text-align: center;
+    padding: 20px 0 16px;
+    border-bottom: 2px solid #333;
+    margin-bottom: 20px;
+  }
+  .print-header h2 { font-size: 20px; }
+  .print-header p { font-size: 11px; color: #666; margin-top: 4px; }
+
+  /* ── UPDATED DATE ── */
+  .updated-label {
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-align: right;
+    margin-bottom: 16px;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .form-row { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-header">
+  <h2>サブスクリプション一覧</h2>
+  <p id="print-date"></p>
+  <p style="margin-top:6px;font-size:11px;color:#c00;">※ ID・パスワードは別紙「デジタル情報保管ノート」をご確認ください</p>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kana">サブスクせいりちょう</div>
+    <h1>サブスク整理帖</h1>
+    <div class="header-sub">契約中のサービス管理 ／ 解約手順ガイド</div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openAddForm()">＋ サービスを追加</button>
+      <button class="btn btn-ghost" onclick="window.print()">🖨 印刷する</button>
+      <button class="btn btn-ghost" onclick="exportData()">↓ データを保存</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">↑ データを読込</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</header>
+
+<div class="legacy-notice">
+  🔐 ID・パスワードはこのアプリに保存しません。別紙「デジタル情報保管ノート」と照合してください。
+</div>
+
+<main>
+  <div class="updated-label" id="updated-label"></div>
+
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="num" id="total-count">0</div>
+      <div class="label">登録件数</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" id="monthly-total">¥0</div>
+      <div class="label">月額合計（概算）</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" id="high-priority-count">0</div>
+      <div class="label">要注意（高）</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" id="annual-total">¥0</div>
+      <div class="label">年間概算</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">絞り込み：</span>
+    <button class="filter-chip active" onclick="filterCards('all', this)">すべて</button>
+    <button class="filter-chip" onclick="filterCards('高', this)">🔴 優先度：高</button>
+    <button class="filter-chip" onclick="filterCards('中', this)">🟡 優先度：中</button>
+    <button class="filter-chip" onclick="filterCards('低', this)">🟢 優先度：低</button>
+  </div>
+
+  <div class="cards-grid" id="cards-grid">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-icon">📋</div>
+      <p>サービスがまだ登録されていません</p>
+      <p style="margin-top:8px;">「＋ サービスを追加」から登録してください</p>
+    </div>
+  </div>
+</main>
+
+<!-- QR Modal -->
+<div class="modal-overlay" id="qr-modal">
+  <div class="modal">
+    <div class="modal-title" id="qr-service-name"></div>
+    <div class="modal-sub">QRコードを読み取って解約ページへ</div>
+    <div id="qr-container"></div>
+    <div class="modal-url" id="qr-url-display"></div>
+    <div class="modal-steps" id="qr-steps">
+      <div class="modal-steps-title">📋 解約手順</div>
+      <ol id="steps-list"></ol>
+    </div>
+    <div class="modal-password-hint" id="qr-pass-hint"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <a id="qr-direct-link" href="#" target="_blank" class="btn btn-primary btn-sm">🌐 ページを開く</a>
+      <button class="btn btn-outline btn-sm" onclick="closeQrModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Form Modal -->
+<div class="modal-overlay" id="form-modal">
+  <div class="form-modal">
+    <div class="form-title" id="form-title">サービスを追加</div>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="form-group">
+          <label>サービス名 *</label>
+          <input type="text" id="f-name" placeholder="例：Netflix">
+        </div>
+        <div class="form-group">
+          <label>カテゴリ</label>
+          <select id="f-category">
+            <option>動画配信</option>
+            <option>音楽</option>
+            <option>ゲーム</option>
+            <option>クラウド・ストレージ</option>
+            <option>ソフトウェア</option>
+            <option>ニュース・雑誌</option>
+            <option>ショッピング</option>
+            <option>健康・美容</option>
+            <option>その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>月額料金（円）</label>
+          <input type="number" id="f-amount" placeholder="例：1490">
+        </div>
+        <div class="form-group">
+          <label>支払い周期</label>
+          <select id="f-cycle">
+            <option value="monthly">月払い</option>
+            <option value="annual">年払い</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>支払い手段</label>
+          <input type="text" id="f-payment" placeholder="例：楽天カード末尾1234">
+        </div>
+        <div class="form-group">
+          <label>優先度（解約急ぎ度）</label>
+          <select id="f-priority">
+            <option value="高">高 ― 有料・すぐ止める</option>
+            <option value="中">中 ― 確認してから決める</option>
+            <option value="低">低 ― 残してもよい</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>解約ページURL</label>
+        <input type="url" id="f-url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>ログインID（メールアドレス等）のヒント ※パスワード不要</label>
+        <input type="text" id="f-id-hint" placeholder="例：メインのGmailアドレス">
+      </div>
+      <div class="form-group">
+        <label>解約手順メモ</label>
+        <textarea id="f-steps" placeholder="例：①ログイン後「アカウント」→②「メンバーシップの解約」をタップ"></textarea>
+      </div>
+      <div class="form-group">
+        <label>備考・注意点</label>
+        <textarea id="f-memo" placeholder="例：年払いのため○月まで有効。解約しても期間中は使える。" style="min-height:55px;"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-danger btn-sm" id="delete-btn" style="display:none;margin-right:auto;" onclick="deleteCurrentCard()">削除</button>
+      <button class="btn btn-outline btn-sm" onclick="closeFormModal()">キャンセル</button>
+      <button class="btn btn-primary btn-sm" onclick="saveCard()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'shukatsu_subs_v1';
+let subs = [];
+let editingId = null;
+let currentFilter = 'all';
+
+const CATEGORY_ICONS = {
+  '動画配信': '🎬', '音楽': '🎵', 'ゲーム': '🎮',
+  'クラウド・ストレージ': '☁️', 'ソフトウェア': '💻',
+  'ニュース・雑誌': '📰', 'ショッピング': '🛒',
+  '健康・美容': '💊', 'その他': '📦'
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    subs = raw ? JSON.parse(raw) : [];
+  } catch(e) { subs = []; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(subs));
+  localStorage.setItem(STORAGE_KEY + '_updated', new Date().toISOString());
+  updateUpdatedLabel();
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+function updateUpdatedLabel() {
+  const d = localStorage.getItem(STORAGE_KEY + '_updated');
+  const el = document.getElementById('updated-label');
+  if (d) {
+    const dt = new Date(d);
+    el.textContent = '最終更新：' + dt.toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  } else {
+    el.textContent = '';
+  }
+}
+
+function updateSummary() {
+  const total = subs.length;
+  let monthly = 0;
+  subs.forEach(s => {
+    const amt = parseFloat(s.amount) || 0;
+    if (s.cycle === 'annual') monthly += amt / 12;
+    else if (s.cycle === 'monthly') monthly += amt;
+  });
+  const high = subs.filter(s => s.priority === '高').length;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('monthly-total').textContent = '¥' + Math.round(monthly).toLocaleString();
+  document.getElementById('annual-total').textContent = '¥' + Math.round(monthly * 12).toLocaleString();
+  document.getElementById('high-priority-count').textContent = high;
+}
+
+function renderCards() {
+  const grid = document.getElementById('cards-grid');
+  const empty = document.getElementById('empty-state');
+  grid.innerHTML = '';
+  let filtered = currentFilter === 'all' ? subs : subs.filter(s => s.priority === currentFilter);
+  if (filtered.length === 0) {
+    grid.appendChild(empty);
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  filtered.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'sub-card';
+    card.dataset.id = s.id;
+
+    const priorityClass = s.priority === '高' ? 'priority-high' : s.priority === '中' ? 'priority-mid' : 'priority-low';
+    const priorityLabel = s.priority === '高' ? '🔴 優先：高' : s.priority === '中' ? '🟡 優先：中' : '🟢 優先：低';
+    const icon = CATEGORY_ICONS[s.category] || '📦';
+    const amtDisplay = s.amount ? '¥' + parseFloat(s.amount).toLocaleString() + (s.cycle === 'monthly' ? '/月' : s.cycle === 'annual' ? '/年' : '') : '—';
+    const memoHtml = s.memo ? `<div class="card-memo">${escHtml(s.memo)}</div>` : '';
+    const idHintHtml = s.idHint ? `<div class="card-info-row"><span class="card-info-label">IDヒント</span><span class="card-info-value">${escHtml(s.idHint)}</span></div>` : '';
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="service-icon">${icon}</div>
+        <div class="card-title-area">
+          <div class="card-service-name">${escHtml(s.name)}</div>
+          <div class="card-category">${escHtml(s.category)}</div>
+        </div>
+        <span class="priority-badge ${priorityClass}">${priorityLabel}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-info-row">
+          <span class="card-info-label">料金</span>
+          <span class="amount-value">${amtDisplay}</span>
+        </div>
+        <div class="card-info-row">
+          <span class="card-info-label">支払い</span>
+          <span class="card-info-value">${escHtml(s.payment || '—')}</span>
+        </div>
+        ${idHintHtml}
+        ${memoHtml}
+      </div>
+      <div class="card-footer">
+        ${s.cancelUrl ? `<button class="qr-btn" onclick="openQrModal('${s.id}')">📱 QR表示</button>
+        <a class="action-link" href="${escHtml(s.cancelUrl)}" target="_blank">${escHtml(s.cancelUrl)}</a>` : '<span style="font-size:11px;color:#aaa;">解約URLが未設定</span>'}
+        <button class="card-edit-btn" onclick="openEditForm('${s.id}')">編集</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Filter ──
+function filterCards(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderCards();
+}
+
+// ── QR Modal ──
+function openQrModal(id) {
+  const s = subs.find(x => x.id === id);
+  if (!s || !s.cancelUrl) return;
+  document.getElementById('qr-service-name').textContent = s.name;
+  document.getElementById('qr-url-display').textContent = s.cancelUrl;
+  document.getElementById('qr-direct-link').href = s.cancelUrl;
+
+  const container = document.getElementById('qr-container');
+  container.innerHTML = '';
+  new QRCode(container, { text: s.cancelUrl, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
+
+  const stepsEl = document.getElementById('steps-list');
+  stepsEl.innerHTML = '';
+  const stepsText = s.steps || '手順は未登録です。編集から追加してください。';
+  stepsText.split('\n').filter(l => l.trim()).forEach(line => {
+    const li = document.createElement('li');
+    li.textContent = line;
+    stepsEl.appendChild(li);
+  });
+
+  const hint = document.getElementById('qr-pass-hint');
+  if (s.idHint) {
+    hint.innerHTML = `🔑 IDヒント：<strong>${escHtml(s.idHint)}</strong><br>パスワードは別紙「デジタル情報保管ノート」を確認してください`;
+    hint.style.display = '';
+  } else {
+    hint.style.display = 'none';
+  }
+
+  document.getElementById('qr-modal').classList.add('open');
+}
+function closeQrModal() {
+  document.getElementById('qr-modal').classList.remove('open');
+  document.getElementById('qr-container').innerHTML = '';
+}
+
+// ── Form Modal ──
+function openAddForm() {
+  editingId = null;
+  document.getElementById('form-title').textContent = 'サービスを追加';
+  document.getElementById('delete-btn').style.display = 'none';
+  ['f-name','f-amount','f-url','f-id-hint','f-steps','f-memo','f-payment'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('f-category').value = '動画配信';
+  document.getElementById('f-cycle').value = 'monthly';
+  document.getElementById('f-priority').value = '高';
+  document.getElementById('form-modal').classList.add('open');
+}
+function openEditForm(id) {
+  const s = subs.find(x => x.id === id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('form-title').textContent = 'サービスを編集';
+  document.getElementById('delete-btn').style.display = '';
+  document.getElementById('f-name').value = s.name || '';
+  document.getElementById('f-category').value = s.category || 'その他';
+  document.getElementById('f-amount').value = s.amount || '';
+  document.getElementById('f-cycle').value = s.cycle || 'monthly';
+  document.getElementById('f-payment').value = s.payment || '';
+  document.getElementById('f-priority').value = s.priority || '高';
+  document.getElementById('f-url').value = s.cancelUrl || '';
+  document.getElementById('f-id-hint').value = s.idHint || '';
+  document.getElementById('f-steps').value = s.steps || '';
+  document.getElementById('f-memo').value = s.memo || '';
+  document.getElementById('form-modal').classList.add('open');
+}
+function closeFormModal() {
+  document.getElementById('form-modal').classList.remove('open');
+  editingId = null;
+}
+function saveCard() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('サービス名を入力してください'); return; }
+  const data = {
+    name,
+    category: document.getElementById('f-category').value,
+    amount: document.getElementById('f-amount').value,
+    cycle: document.getElementById('f-cycle').value,
+    payment: document.getElementById('f-payment').value.trim(),
+    priority: document.getElementById('f-priority').value,
+    cancelUrl: document.getElementById('f-url').value.trim(),
+    idHint: document.getElementById('f-id-hint').value.trim(),
+    steps: document.getElementById('f-steps').value.trim(),
+    memo: document.getElementById('f-memo').value.trim(),
+  };
+  if (editingId) {
+    const idx = subs.findIndex(x => x.id === editingId);
+    if (idx >= 0) subs[idx] = { ...subs[idx], ...data };
+  } else {
+    subs.push({ id: uid(), ...data });
+  }
+  save();
+  renderCards();
+  updateSummary();
+  closeFormModal();
+}
+function deleteCurrentCard() {
+  if (!editingId) return;
+  if (!confirm('このサービスを削除しますか？')) return;
+  subs = subs.filter(x => x.id !== editingId);
+  save();
+  renderCards();
+  updateSummary();
+  closeFormModal();
+}
+
+// ── Export / Import ──
+function exportData() {
+  const json = JSON.stringify(subs, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'subscriptions_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('形式エラー');
+      if (!confirm(`${imported.length}件のデータを読み込みます。現在のデータは上書きされます。よろしいですか？`)) return;
+      subs = imported;
+      save();
+      renderCards();
+      updateSummary();
+      alert('読み込みが完了しました。');
+    } catch(err) {
+      alert('ファイルの読み込みに失敗しました。正しいJSONファイルを選択してください。');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── Close on overlay click ──
+document.getElementById('qr-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeQrModal();
+});
+document.getElementById('form-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeFormModal();
+});
+
+// ── Print date ──
+document.getElementById('print-date').textContent =
+  '印刷日：' + new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric'});
+
+// ── Init ──
+load();
+updateUpdatedLabel();
+updateSummary();
+renderCards();
+</script>
+</body>
+</html>
