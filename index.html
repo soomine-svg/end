@@ -551,6 +551,62 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 }
 .import-section p { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
 
+/* ── PASSWORD PANEL ── */
+.pw-notice {
+  background: var(--amber-pale);
+  border: 1px solid #5a3808;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #d4a060;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+.pw-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.pw-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.pw-card:hover { border-color: var(--border-light); }
+.pw-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.pw-num-badge {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pw-service-name { font-size: 14px; font-weight: 500; flex: 1; }
+.pw-card-body { padding: 12px 14px; }
+.pw-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+.pw-row-label { color: var(--text-faint); font-size: 10px; min-width: 40px; letter-spacing: 0.06em; padding-top: 1px; }
+.pw-row-value { color: var(--text-dim); flex: 1; word-break: break-all; }
+.pw-row-value.masked { letter-spacing: 0.15em; color: var(--text-faint); }
+.pw-card-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+.pw-qr-wrap { display: none; padding: 14px; border-top: 1px solid var(--border); gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.pw-qr-wrap.open { display: flex; }
+.pw-qr-text { font-size: 11px; color: var(--text-dim); line-height: 1.9; }
+
 /* ── PRINT ── */
 @media print {
   header, .tabs-wrap, .header-btns,
@@ -573,6 +629,17 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   .task-meta { color: #666; }
   .cat-header h2 { color: #333; }
   .print-header { display: block !important; }
+  /* パスワードタブ印刷 */
+  .pw-notice, .pw-card-footer { display: none !important; }
+  .pw-list { grid-template-columns: repeat(2, 1fr) !important; }
+  .pw-card { border: 1px solid #999; break-inside: avoid; background: white; }
+  .pw-card-header { background: #eee; }
+  .pw-service-name, .pw-row-value { color: #000 !important; }
+  .pw-row-label { color: #666 !important; }
+  .pw-num-badge { background: #333 !important; color: white !important; }
+  .pw-row-value.masked { letter-spacing: normal !important; font-size: 0 !important; }
+  .pw-row-value.masked::before { content: attr(data-real); font-size: 12px; color: #000; }
+  .pw-qr-wrap { display: flex !important; }
 }
 .print-header {
   display: none;
@@ -645,6 +712,10 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
     <div class="tab" onclick="switchTab('cat4', this)">
       <span>🌐</span> デジタル資産
       <span class="tab-badge" id="badge-cat4">0</span>
+    </div>
+    <div class="tab" onclick="switchTab('pw', this)">
+      <span>🔑</span> パスワード
+      <span class="tab-badge" id="badge-pw">0</span>
     </div>
   </div>
 </div>
@@ -827,9 +898,65 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
       <p>まだ登録がありません</p>
     </div>
   </div>
+  <!-- PASSWORD PANEL -->
+  <div class="cat-panel" id="panel-pw">
+    <div class="cat-header">
+      <div class="cat-icon-lg">🔑</div>
+      <div class="cat-header-text">
+        <h2>パスワード一覧</h2>
+        <p>印刷して封筒・金庫で保管 ／ QRコードで照合</p>
+      </div>
+      <button class="add-task-btn" onclick="openAddPw()">＋ 追加</button>
+    </div>
+    <div class="pw-notice">
+      🔒 画面上はパスワードを伏字表示しています。<strong>印刷時のみ実値が表示されます。</strong>印刷後は紙を封筒または金庫で保管してください。
+    </div>
+    <div class="pw-list" id="pw-list"></div>
+    <div class="empty-cat" id="empty-pw">
+      <div class="empty-cat-icon">🔑</div>
+      <p>まだ登録がありません</p>
+    </div>
+  </div>
 </main>
 
-<!-- Task Form Modal -->
+<!-- Password Form Modal -->
+<div class="overlay" id="pw-modal">
+  <div class="modal">
+    <div class="modal-title" id="pw-modal-title">パスワードを追加</div>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="fg">
+          <label>番号（タスクとの紐付け用）</label>
+          <input type="text" id="pw-num" placeholder="例：1">
+        </div>
+        <div class="fg">
+          <label>サービス名 *</label>
+          <input type="text" id="pw-name" placeholder="例：Netflix">
+        </div>
+      </div>
+      <div class="fg">
+        <label>ID / メールアドレス</label>
+        <input type="text" id="pw-id" placeholder="例：xxx@gmail.com" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label>パスワード</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="password" id="pw-pass" placeholder="パスワードを入力" autocomplete="off" style="flex:1;">
+          <button type="button" onclick="togglePwVisible()" style="padding:8px 12px;background:var(--bg3);border:1px solid var(--border-light);border-radius:3px;color:var(--text-dim);cursor:pointer;font-size:12px;white-space:nowrap;">表示</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>備考（秘密の質問・PINなど）</label>
+        <textarea id="pw-memo" placeholder="例：秘密の質問：母の旧姓" style="min-height:55px;"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="mbtn mbtn-del" id="pw-del-btn" style="display:none" onclick="deletePw()">削除</button>
+      <button class="mbtn mbtn-cancel" onclick="closePwModal()">キャンセル</button>
+      <button class="mbtn mbtn-save" onclick="savePw()">保存する</button>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="task-modal">
   <div class="modal">
     <div class="modal-title" id="modal-title">タスクを追加</div>
@@ -878,23 +1005,26 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 </div>
 
 <script>
-const STORE = 'ending_note_v1';
 let data = { tasks: [] };
 let editingId = null;
 let editingCat = 0;
 
 const CAT_NAMES = ['契約・サブスク','法人・事業','備品・返却','金融・保険','デジタル資産'];
 
-function load() {
+async function load() {
   try {
-    const raw = localStorage.getItem(STORE);
-    if (raw) data = JSON.parse(raw);
+    const res = await fetch('data.json?_=' + Date.now());
+    if (!res.ok) throw new Error('not found');
+    data = await res.json();
     if (!data.tasks) data.tasks = [];
-  } catch(e) { data = { tasks: [] }; }
+  } catch(e) {
+    data = { tasks: [] };
+  }
+  renderAll();
 }
+
 function save() {
-  localStorage.setItem(STORE, JSON.stringify(data));
-  localStorage.setItem(STORE + '_upd', new Date().toISOString());
+  // 編集後は「↓ 保存」でdata.jsonをダウンロード → GitHubにアップロード
 }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function esc(s) {
@@ -922,6 +1052,7 @@ function renderAll() {
   for (let c = 0; c < 5; c++) renderCat(c);
   renderDashboard();
   renderProgress();
+  renderPasswords();
 }
 
 function renderCat(c) {
@@ -1044,13 +1175,6 @@ function toggleDetail(id) {
   const el = document.getElementById('detail-' + id);
   if (el) el.classList.toggle('open');
 }
-function toggleDone(id) {
-  const t = data.tasks.find(x => x.id === id);
-  if (!t) return;
-  t.done = !t.done;
-  save();
-  renderAll();
-}
 
 // ── FORM ──
 function openAddTask(cat) {
@@ -1098,23 +1222,48 @@ function saveTask() {
     memo: document.getElementById('f-memo').value.trim(),
     done: false,
   };
+  let savedId;
   if (editingId) {
     const idx = data.tasks.findIndex(x => x.id === editingId);
     if (idx >= 0) { taskData.done = data.tasks[idx].done; data.tasks[idx] = { id: editingId, ...taskData }; }
+    savedId = editingId;
   } else {
-    data.tasks.push({ id: uid(), ...taskData });
+    savedId = uid();
+    data.tasks.push({ id: savedId, ...taskData });
   }
-  save();
   renderAll();
   closeModal();
+
+  // パスワード連携フロー（新規追加時のみ）
+  if (!editingId && !taskData.idHint) {
+    if (confirm('このタスクにID・パスワードが必要ですか？\n\n「OK」でパスワードタブに移動して登録できます。\n登録後、タスクに自動で番号が紐付けられます。')) {
+      pendingLinkTaskId = savedId;
+      openAddPwForLink(name);
+      return;
+    }
+  }
+  promptExport();
 }
 function deleteTask() {
   if (!editingId) return;
   if (!confirm('このタスクを削除しますか？')) return;
   data.tasks = data.tasks.filter(x => x.id !== editingId);
-  save();
   renderAll();
   closeModal();
+  promptExport();
+}
+function toggleDone(id) {
+  const t = data.tasks.find(x => x.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  renderAll();
+  promptExport();
+}
+
+function promptExport() {
+  if (confirm('データを更新しました。\n\n「OK」でdata.jsonをダウンロードします。\nGitHubの「end」リポジトリにアップロードすると、URLを開く全員に反映されます。')) {
+    exportAll();
+  }
 }
 
 // ── EXPORT / IMPORT ──
@@ -1122,7 +1271,7 @@ function exportAll() {
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'ending_note_' + new Date().toISOString().slice(0,10) + '.json';
+  a.download = 'data.json';
   a.click();
 }
 function importAll(event) {
@@ -1135,9 +1284,9 @@ function importAll(event) {
       if (!imported.tasks) throw new Error();
       if (!confirm(`${imported.tasks.length}件を読み込みます。現在のデータは上書きされます。`)) return;
       data = imported;
-      save();
       renderAll();
-      alert('読み込みが完了しました。');
+      promptExport();
+      alert('読み込みが完了しました。GitHubへのアップロードをお忘れなく。');
     } catch { alert('ファイルの読み込みに失敗しました。'); }
   };
   r.readAsText(file);
@@ -1167,18 +1316,183 @@ function importSubs(event) {
       }));
       if (!confirm(`サブスク整理帖から ${tasks.length} 件を「契約・サブスク」に追加します。`)) return;
       data.tasks.push(...tasks);
-      save();
       renderAll();
-      alert('取込みが完了しました。');
+      promptExport();
+      alert('取込みが完了しました。GitHubへのアップロードをお忘れなく。');
     } catch { alert('ファイルの読み込みに失敗しました。'); }
   };
   r.readAsText(file);
   event.target.value = '';
 }
 
+// ── PASSWORD ──
+let editingPwId = null;
+let pendingLinkTaskId = null; // タスクからの自動紐付け待ち
+
+function openAddPwForLink(taskName) {
+  editingPwId = null;
+  document.getElementById('pw-modal-title').textContent = '🔑 パスワードを登録（タスクに自動紐付け）';
+  document.getElementById('pw-del-btn').style.display = 'none';
+  ['pw-num','pw-name','pw-id','pw-pass','pw-memo'].forEach(id => document.getElementById(id).value = '');
+  const pws = data.passwords || [];
+  const maxNum = pws.reduce((m, p) => Math.max(m, parseInt(p.num) || 0), 0);
+  document.getElementById('pw-num').value = maxNum + 1;
+  document.getElementById('pw-name').value = taskName.replace(/　?解約.*$/, '').trim();
+  // パスワードタブに切り替え
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dashboard,.cat-panel').forEach(p => p.classList.remove('active'));
+  const pwTab = document.querySelector('[onclick="switchTab(\'pw\', this)"]');
+  if (pwTab) pwTab.classList.add('active');
+  document.getElementById('panel-pw').classList.add('active');
+  document.getElementById('pw-modal').classList.add('open');
+}
+
+function renderPasswords() {
+  const list = document.getElementById('pw-list');
+  const empty = document.getElementById('empty-pw');
+  const pws = (data.passwords || []);
+  list.innerHTML = '';
+  const badge = document.getElementById('badge-pw');
+  badge.textContent = pws.length;
+  if (pws.length === 0) { empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  pws.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pw-card';
+    card.id = 'pwcard-' + p.id;
+    const maskedPw = p.pass ? '●'.repeat(Math.min(p.pass.length, 12)) : '—';
+    card.innerHTML = `
+      <div class="pw-card-header">
+        <div class="pw-num-badge">${esc(p.num || '?')}</div>
+        <div class="pw-service-name">${esc(p.name)}</div>
+      </div>
+      <div class="pw-card-body">
+        ${p.id_val ? `<div class="pw-row"><span class="pw-row-label">ID</span><span class="pw-row-value">${esc(p.id_val)}</span></div>` : ''}
+        ${p.pass ? `<div class="pw-row"><span class="pw-row-label">PW</span><span class="pw-row-value masked" data-real="${esc(p.pass)}">${maskedPw}</span></div>` : ''}
+        ${p.memo ? `<div class="pw-row"><span class="pw-row-label">備考</span><span class="pw-row-value">${esc(p.memo)}</span></div>` : ''}
+      </div>
+      <div class="pw-card-footer">
+        <button class="det-btn" onclick="togglePwQr('${p.id}')">📱 QR表示</button>
+        <button class="det-btn" onclick="openEditPw('${p.id}')">✏ 編集</button>
+      </div>
+      <div class="pw-qr-wrap" id="pwqr-${p.id}">
+        <div class="pw-qr-inner" id="pwqr-canvas-${p.id}"></div>
+        <div class="pw-qr-text">
+          <strong style="color:var(--gold);display:block;margin-bottom:6px;">🔑 #${esc(p.num || '?')} ${esc(p.name)}</strong>
+          ${p.id_val ? `ID: ${esc(p.id_val)}<br>` : ''}
+          ${p.pass ? `PW: <span class="pw-row-value masked" data-real="${esc(p.pass)}">${maskedPw}</span><br>` : ''}
+          ${p.memo ? `備考: ${esc(p.memo)}` : ''}
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function togglePwQr(id) {
+  const wrap = document.getElementById('pwqr-' + id);
+  const canvas = document.getElementById('pwqr-canvas-' + id);
+  if (wrap.classList.contains('open')) {
+    wrap.classList.remove('open');
+    return;
+  }
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p) return;
+  canvas.innerHTML = '';
+  const qrText = [
+    '#' + (p.num || '?') + ' ' + p.name,
+    p.id_val ? 'ID: ' + p.id_val : '',
+    p.pass ? 'PW: ' + p.pass : '',
+    p.memo ? '備考: ' + p.memo : ''
+  ].filter(Boolean).join('\n');
+  new QRCode(canvas, { text: qrText, width: 140, height: 140, correctLevel: QRCode.CorrectLevel.M });
+  wrap.classList.add('open');
+}
+
+function openAddPw() {
+  editingPwId = null;
+  document.getElementById('pw-modal-title').textContent = 'パスワードを追加';
+  document.getElementById('pw-del-btn').style.display = 'none';
+  ['pw-num','pw-name','pw-id','pw-pass','pw-memo'].forEach(id => document.getElementById(id).value = '');
+  // 次の番号を自動セット
+  const pws = data.passwords || [];
+  const maxNum = pws.reduce((m, p) => Math.max(m, parseInt(p.num) || 0), 0);
+  document.getElementById('pw-num').value = maxNum + 1;
+  document.getElementById('pw-modal').classList.add('open');
+}
+function openEditPw(id) {
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p) return;
+  editingPwId = id;
+  document.getElementById('pw-modal-title').textContent = '編集';
+  document.getElementById('pw-del-btn').style.display = '';
+  document.getElementById('pw-num').value = p.num || '';
+  document.getElementById('pw-name').value = p.name || '';
+  document.getElementById('pw-id').value = p.id_val || '';
+  document.getElementById('pw-pass').value = p.pass || '';
+  document.getElementById('pw-memo').value = p.memo || '';
+  document.getElementById('pw-modal').classList.add('open');
+}
+function closePwModal() {
+  document.getElementById('pw-modal').classList.remove('open');
+  editingPwId = null;
+  pendingLinkTaskId = null;
+  document.getElementById('pw-pass').type = 'password';
+}
+function togglePwVisible() {
+  const inp = document.getElementById('pw-pass');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function savePw() {
+  const name = document.getElementById('pw-name').value.trim();
+  if (!name) { alert('サービス名を入力してください'); return; }
+  if (!data.passwords) data.passwords = [];
+  const pwData = {
+    num: document.getElementById('pw-num').value.trim(),
+    name,
+    id_val: document.getElementById('pw-id').value.trim(),
+    pass: document.getElementById('pw-pass').value,
+    memo: document.getElementById('pw-memo').value.trim(),
+  };
+  let newPwId;
+  if (editingPwId) {
+    const idx = data.passwords.findIndex(x => x.id === editingPwId);
+    if (idx >= 0) data.passwords[idx] = { id: editingPwId, ...pwData };
+    newPwId = editingPwId;
+  } else {
+    newPwId = uid();
+    data.passwords.push({ id: newPwId, ...pwData });
+  }
+
+  // タスクからの自動紐付け
+  if (pendingLinkTaskId) {
+    const tIdx = data.tasks.findIndex(x => x.id === pendingLinkTaskId);
+    if (tIdx >= 0) {
+      data.tasks[tIdx].idHint = `🔑 #${pwData.num} ${name}`;
+      data.tasks[tIdx].pwId = newPwId;
+    }
+    pendingLinkTaskId = null;
+  }
+
+  renderAll();
+  closePwModal();
+  promptExport();
+}
+function deletePw() {
+  if (!editingPwId) return;
+  if (!confirm('このパスワード情報を削除しますか？')) return;
+  data.passwords = (data.passwords || []).filter(x => x.id !== editingPwId);
+  renderPasswords();
+  closePwModal();
+  promptExport();
+}
+
 // ── OVERLAY CLOSE ──
 document.getElementById('task-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
+});
+document.getElementById('pw-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePwModal();
 });
 
 // ── PRINT DATE ──
@@ -1186,8 +1500,7 @@ document.getElementById('print-date-top').textContent =
   '印刷日：' + new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric'});
 
 // ── INIT ──
-load();
-renderAll();
+load(); // data.jsonを非同期取得 → renderAll()はload()内で呼ばれる
 </script>
 </body>
 </html>
