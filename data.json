@@ -1,3 +1,47 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "moy4kj5tnyhw",
+      "name": "スマホのデータ（必要であればの話）",
+      "cat": 0,
+      "priority": "中",
+      "deadline": "必要であればスマホ解約前迄に",
+      "contact": "https://digital-legacy.apple.com/",
+      "idHint": "🔑 #1 スマホのデータ（必要であればの話）",
+      "steps": "【故人アカウント管理連絡先設定済み】\n① Appleのデジタル遺産申請ページへアクセス（上記URL）\n②「アクセスをリクエスト」を選択\n③アクセスキーと必要書類の画像データをアップロードし、Appleの審査を受ける。\n※必要書類とは… 死亡診断書・除籍謄本など故人の死亡を証明する公的書類\n\n④承認後、データにアクセス可能",
+      "memo": "アクセスキーはパスワードのところに入れてる。",
+      "done": false,
+      "pwId": "moy4lq5rikhh"
+    },
+    {
+      "id": "moy5dsimv86e",
+      "name": "スマホ内のサブスク",
+      "cat": 0,
+      "priority": "中",
+      "deadline": "なるべく早く",
+      "contact": "https://account.apple.com/sign-in",
+      "idHint": "🔑 #2  auのメールアドレス",
+      "steps": "①サインイン\n②「サブスクリクション」タブを開く\n③有効の分を全て解除",
+      "memo": "上手くいかない時はAppleサポートへ連絡。\nAppleサポートページ：https://support.apple.com/ja-jp\nAppleサポート☎️：0120-993-993",
+      "done": false
+    }
+  ],
+  "passwords": [
+    {
+      "id": "moy4lq5rikhh",
+      "num": "1",
+      "name": "スマホのデータ（必要であればの話）",
+      "id_val": "",
+      "pass": "QPGN-MLT4-DWED-WUGW-TLF4-B9NR-LM2Y-37CB-YHPU-X9K8-S444-DVNC-WTTT-QRBP-N8QE-UE62-BJ8R-QFWR-GYVM-3VL5-34VW-ZDPN",
+      "memo": ""
+    },
+    {
+      "id": "moy5grna725x",
+      "num": "2",
+      "name": "スマホのサブスク",
+      "id_val": "so-shinkan@ezweb.ne.jp",
+      "pass": "Sr11050311",
+      "memo": ""
+    }
+  ]
 }

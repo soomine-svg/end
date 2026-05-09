@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>お願いします</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1222,6 +1223,7 @@ function saveTask() {
     memo: document.getElementById('f-memo').value.trim(),
     done: false,
   };
+  const isNew = !editingId;
   let savedId;
   if (editingId) {
     const idx = data.tasks.findIndex(x => x.id === editingId);
@@ -1235,7 +1237,7 @@ function saveTask() {
   closeModal();
 
   // パスワード連携フロー（新規追加時のみ）
-  if (!editingId && !taskData.idHint) {
+  if (isNew && !taskData.idHint) {
     if (confirm('このタスクにID・パスワードが必要ですか？\n\n「OK」でパスワードタブに移動して登録できます。\n登録後、タスクに自動で番号が紐付けられます。')) {
       pendingLinkTaskId = savedId;
       openAddPwForLink(name);
