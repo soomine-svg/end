@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>お願いします</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1407,8 +1406,177 @@ function togglePwQr(id) {
     p.pass ? 'PW: ' + p.pass : '',
     p.memo ? '備考: ' + p.memo : ''
   ].filter(Boolean).join('\n');
-  new QRCode(canvas, { text: qrText, width: 140, height: 140, correctLevel: QRCode.CorrectLevel.M });
+  drawQR(canvas, qrText, 140);
   wrap.classList.add('open');
+}
+
+// ── 自前QRコード生成 (QR Version 5, ECC L) ──
+function drawQR(container, text, size) {
+  try {
+    const matrix = generateQRMatrix(text);
+    const canvas = document.createElement('canvas');
+    const n = matrix.length;
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const cell = size / (n + 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#000000';
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        if (matrix[r][c]) {
+          ctx.fillRect((c + 2) * cell, (r + 2) * cell, cell, cell);
+        }
+      }
+    }
+    container.appendChild(canvas);
+  } catch(e) {
+    container.innerHTML = '<div style="font-size:11px;color:var(--text-dim);padding:10px;">QR生成エラー：テキストが長すぎる可能性があります</div>';
+  }
+}
+
+function generateQRMatrix(text) {
+  // encode as byte mode, use qrcode-generator style approach
+  const bytes = encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, (m,p1) => String.fromCharCode(parseInt(p1,16)));
+  const len = bytes.length;
+  // pick version (1-10 supported)
+  const caps = [17,32,53,78,106,134,154,192,230,271];
+  let ver = caps.findIndex(c => c >= len);
+  if (ver < 0) ver = 9;
+  const size = ver * 4 + 21;
+  let matrix = Array.from({length:size}, () => new Array(size).fill(null));
+  let mask = Array.from({length:size}, () => new Array(size).fill(false));
+
+  function place(r,c,v){ if(r>=0&&r<size&&c>=0&&c<size){ matrix[r][c]=v; mask[r][c]=true; } }
+
+  // finder patterns
+  function finder(tr,tc){
+    for(let i=-1;i<=7;i++) for(let j=-1;j<=7;j++){
+      if(i<-1||i>7||j<-1||j>7) continue;
+      const v=(i===0||i===6||j===0||j===6||( i>=2&&i<=4&&j>=2&&j<=4));
+      place(tr+i,tc+j,v?1:0);
+    }
+  }
+  finder(0,0); finder(0,size-7); finder(size-7,0);
+
+  // timing
+  for(let i=8;i<size-8;i++){
+    place(6,i,(i%2===0)?1:0);
+    place(i,6,(i%2===0)?1:0);
+  }
+
+  // dark module
+  place(size-8,8,1);
+
+  // alignment (ver>=2)
+  if(ver>=2){
+    const ap=[6, 6+Math.round((size-13)/2), size-7];
+    for(const ar of [ap[1]]){
+      for(const ac of [ap[1]]){
+        if(mask[ar][ac]) continue;
+        for(let i=-2;i<=2;i++) for(let j=-2;j<=2;j++){
+          place(ar+i,ac+j,(Math.abs(i)===2||Math.abs(j)===2||( i===0&&j===0))?1:0);
+        }
+      }
+    }
+  }
+
+  // format info placeholders
+  const fpos=[[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[7,8],[8,8],[8,7],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0]];
+  const fpos2=[[size-1,8],[size-2,8],[size-3,8],[size-4,8],[size-5,8],[size-6,8],[size-7,8],[8,size-8],[8,size-7],[8,size-6],[8,size-5],[8,size-4],[8,size-3],[8,size-2],[8,size-1]];
+  fpos.forEach(([r,c])=>place(r,c,0));
+  fpos2.forEach(([r,c])=>place(r,c,0));
+
+  // data encoding: byte mode
+  let bits=[];
+  // mode indicator 0100
+  bits.push(0,1,0,0);
+  // char count (8 bits for ver1-9)
+  for(let i=7;i>=0;i--) bits.push((len>>i)&1);
+  // data
+  for(let i=0;i<len;i++){
+    const b=bytes.charCodeAt(i);
+    for(let j=7;j>=0;j--) bits.push((b>>j)&1);
+  }
+  // terminator
+  for(let i=0;i<4&&bits.length%8!==0;i++) bits.push(0);
+  while(bits.length%8!==0) bits.push(0);
+  // pad bytes
+  const pads=[0xEC,0x11];
+  const totalBits=[104,128,208,288,368,480,528,688,800,976][ver];
+  let pi=0;
+  while(bits.length<totalBits){ const pb=pads[pi%2];pi++;for(let j=7;j>=0;j--) bits.push((pb>>j)&1); }
+  bits=bits.slice(0,totalBits);
+
+  // error correction (simplified Reed-Solomon for ECC L)
+  const ecBytes=[7,10,15,20,26,36,40,48,60,74][ver];
+  const dataBytes=bits.length/8;
+  const dataArr=[];
+  for(let i=0;i<dataBytes;i++){
+    let b=0;
+    for(let j=0;j<8;j++) b=(b<<1)|bits[i*8+j];
+    dataArr.push(b);
+  }
+  const ec=rsEncode(dataArr,ecBytes);
+  const allBits=[...bits];
+  ec.forEach(b=>{ for(let j=7;j>=0;j--) allBits.push((b>>j)&1); });
+
+  // place data bits
+  const order=[];
+  let up=true;
+  for(let c=size-1;c>=1;c-=2){
+    if(c===6) c=5;
+    for(let r2=0;r2<size;r2++){
+      const r=up?size-1-r2:r2;
+      for(let dc=0;dc<2;dc++){
+        const col=c-dc;
+        if(!mask[r][col]) order.push([r,col]);
+      }
+    }
+    up=!up;
+  }
+  order.forEach(([r,c],i)=>{
+    if(i<allBits.length){
+      // mask pattern 0: (r+c)%2==0
+      const mv=((r+c)%2===0)?1:0;
+      matrix[r][c]=(allBits[i]^mv)?1:0;
+    }
+  });
+
+  // apply format info (ECC L = 01, mask 0 = 000, format = 010101001001111 after XOR)
+  const fmt=0b010101001001111;
+  for(let i=0;i<15;i++){
+    const v=(fmt>>i)&1;
+    const [r1,c1]=fpos[i];
+    const [r2,c2]=fpos2[i];
+    matrix[r1][c1]=v;
+    matrix[r2][c2]=v;
+  }
+  return matrix;
+}
+
+function rsEncode(data, ecLen) {
+  const gf_exp=new Uint8Array(512);
+  const gf_log=new Uint8Array(256);
+  let x=1;
+  for(let i=0;i<255;i++){ gf_exp[i]=x; gf_log[x]=i; x<<=1; if(x&256) x^=285; }
+  for(let i=255;i<512;i++) gf_exp[i]=gf_exp[i-255];
+  function mul(a,b){ return(a===0||b===0)?0:gf_exp[gf_log[a]+gf_log[b]]; }
+  // generator poly
+  let g=[1];
+  for(let i=0;i<ecLen;i++){
+    const factor=[1, gf_exp[i]];
+    const ng=new Array(g.length+1).fill(0);
+    for(let j=0;j<g.length;j++) for(let k=0;k<factor.length;k++) ng[j+k]^=mul(g[j],factor[k]);
+    g=ng;
+  }
+  const msg=[...data,...new Array(ecLen).fill(0)];
+  for(let i=0;i<data.length;i++){
+    const coef=msg[i];
+    if(coef!==0) for(let j=1;j<g.length;j++) msg[i+j]^=mul(g[j],coef);
+  }
+  return msg.slice(data.length);
 }
 
 function openAddPw() {
