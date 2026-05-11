@@ -606,9 +606,15 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   display: flex;
   gap: 8px;
 }
-.pw-qr-wrap { display: none; padding: 14px; border-top: 1px solid var(--border); gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.pw-qr-wrap { display: none; padding: 14px; border-top: 1px solid var(--border); gap: 16px; align-items: flex-start; flex-wrap: wrap; background: #fff; }
 .pw-qr-wrap.open { display: flex; }
-.pw-qr-text { font-size: 11px; color: var(--text-dim); line-height: 1.9; }
+.pw-qr-inner { width: 160px; height: 160px; flex-shrink: 0; background: #fff; padding: 8px; border-radius: 4px; }
+.pw-qr-inner img, .pw-qr-inner canvas, .pw-qr-inner svg { display: block; width: 100% !important; height: 100% !important; }
+.pw-qr-text { font-size: 11px; color: #333; line-height: 1.9; flex: 1; min-width: 140px; }
+.pw-qr-text strong { color: #b8941f !important; }
+.pw-qr-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.pw-qr-actions button { font-size: 10px; padding: 4px 8px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 3px; cursor: pointer; }
+.pw-qr-actions button:hover { background: var(--gold-pale); border-color: var(--gold); }
 
 /* ── PRINT ── */
 @media print {
@@ -1376,16 +1382,22 @@ function renderPasswords() {
         ${p.memo ? `<div class="pw-row"><span class="pw-row-label">備考</span><span class="pw-row-value">${esc(p.memo)}</span></div>` : ''}
       </div>
       <div class="pw-card-footer">
-        <button class="det-btn" onclick="togglePwQr('${p.id}')">📱 QR表示</button>
+        <button class="det-btn" onclick="togglePwQr('${p.id}')">📱 QR</button>
+        ${p.pass ? `<button class="det-btn" onclick="togglePwReveal('${p.id}')">👁 表示</button>` : ''}
+        ${p.pass ? `<button class="det-btn" onclick="copyPwToClipboard('${p.id}','pass')">📋 PW</button>` : ''}
         <button class="det-btn" onclick="openEditPw('${p.id}')">✏ 編集</button>
       </div>
       <div class="pw-qr-wrap" id="pwqr-${p.id}">
         <div class="pw-qr-inner" id="pwqr-canvas-${p.id}"></div>
         <div class="pw-qr-text">
-          <strong style="color:var(--gold);display:block;margin-bottom:6px;">🔑 #${esc(p.num || '?')} ${esc(p.name)}</strong>
+          <strong style="display:block;margin-bottom:6px;">🔑 #${esc(p.num || '?')} ${esc(p.name)}</strong>
           ${p.id_val ? `ID: ${esc(p.id_val)}<br>` : ''}
-          ${p.pass ? `PW: <span class="pw-row-value masked" data-real="${esc(p.pass)}">${maskedPw}</span><br>` : ''}
+          ${p.pass ? `PW: ${esc(p.pass)}<br>` : ''}
           ${p.memo ? `備考: ${esc(p.memo)}` : ''}
+          <div class="pw-qr-actions">
+            <button onclick="copyPwToClipboard('${p.id}','all')">📋 全情報コピー</button>
+            <button onclick="downloadQrPng('${p.id}')">💾 PNG保存</button>
+          </div>
         </div>
       </div>
     `;
@@ -1393,15 +1405,71 @@ function renderPasswords() {
   });
 }
 
+// QRコードをPNGとしてダウンロード（紙保管用）
+function downloadQrPng(id) {
+  const canvas = document.getElementById('pwqr-canvas-' + id);
+  if (!canvas) return;
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p) return;
+  // QRCode.js は canvas または img を生成。imgがあればそちらを優先
+  const img = canvas.querySelector('img');
+  const cv = canvas.querySelector('canvas');
+  const svg = canvas.querySelector('svg');
+  const filename = `QR_${(p.num || '?')}_${(p.name || 'password').replace(/[^\w\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '_')}.png`;
+  if (img && img.src && img.style.display !== 'none') {
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = filename;
+    a.click();
+    showToast('💾 PNG保存しました');
+  } else if (cv) {
+    const a = document.createElement('a');
+    a.href = cv.toDataURL('image/png');
+    a.download = filename;
+    a.click();
+    showToast('💾 PNG保存しました');
+  } else if (svg) {
+    // SVGをcanvas経由でPNG化
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    const image = new Image();
+    image.onload = function () {
+      const c = document.createElement('canvas');
+      c.width = 320; c.height = 320;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(image, 0, 0, c.width, c.height);
+      const a = document.createElement('a');
+      a.href = c.toDataURL('image/png');
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('💾 PNG保存しました');
+    };
+    image.src = url;
+  } else {
+    alert('QRコードが生成されていません');
+  }
+}
+
 function togglePwQr(id) {
   const wrap = document.getElementById('pwqr-' + id);
   const canvas = document.getElementById('pwqr-canvas-' + id);
+  if (!wrap || !canvas) return;
   if (wrap.classList.contains('open')) {
     wrap.classList.remove('open');
+    canvas.innerHTML = '';
     return;
   }
   const p = (data.passwords || []).find(x => x.id === id);
   if (!p) return;
+  // QRライブラリ未読込チェック
+  if (typeof QRCode === 'undefined') {
+    alert('QRライブラリの読み込みに失敗しました。ページを再読み込みしてください。');
+    return;
+  }
   canvas.innerHTML = '';
   const qrText = [
     '#' + (p.num || '?') + ' ' + p.name,
@@ -1409,8 +1477,91 @@ function togglePwQr(id) {
     p.pass ? 'PW: ' + p.pass : '',
     p.memo ? '備考: ' + p.memo : ''
   ].filter(Boolean).join('\n');
-  new QRCode(canvas, { text: qrText, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
-  wrap.classList.add('open');
+  try {
+    new QRCode(canvas, { text: qrText, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
+    wrap.classList.add('open');
+  } catch (e) {
+    alert('QRコード生成に失敗しました: ' + e.message);
+    console.error(e);
+  }
+}
+
+// パスワードをクリップボードへコピー
+function copyPwToClipboard(id, field) {
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p) return;
+  let text = '';
+  if (field === 'pass') text = p.pass || '';
+  else if (field === 'id_val') text = p.id_val || '';
+  else if (field === 'all') {
+    text = [
+      '#' + (p.num || '?') + ' ' + p.name,
+      p.id_val ? 'ID: ' + p.id_val : '',
+      p.pass ? 'PW: ' + p.pass : '',
+      p.memo ? '備考: ' + p.memo : ''
+    ].filter(Boolean).join('\n');
+  }
+  if (!text) { alert('コピーする内容がありません'); return; }
+  // navigator.clipboard が使えない環境向けにfallback
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('📋 コピーしました');
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('📋 コピーしました');
+  } catch (e) {
+    alert('コピーに失敗しました。手動で選択してください。');
+  }
+  document.body.removeChild(ta);
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('pw-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'pw-toast';
+    toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);padding:10px 20px;border-radius:4px;font-size:13px;font-weight:500;z-index:9999;box-shadow:0 4px 12px var(--shadow);opacity:0;transition:opacity 0.2s;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 1800);
+}
+
+// パスワードの一時表示トグル（カード内）
+function togglePwReveal(id) {
+  const card = document.getElementById('pwcard-' + id);
+  if (!card) return;
+  const masked = card.querySelector('.pw-row-value.masked');
+  if (!masked) return;
+  if (masked.dataset.revealed === '1') {
+    masked.textContent = '●'.repeat(Math.min((masked.dataset.real || '').length, 12));
+    masked.dataset.revealed = '0';
+  } else {
+    masked.textContent = masked.dataset.real || '';
+    masked.dataset.revealed = '1';
+    // 10秒後に自動マスク
+    setTimeout(() => {
+      if (masked.dataset.revealed === '1') {
+        masked.textContent = '●'.repeat(Math.min((masked.dataset.real || '').length, 12));
+        masked.dataset.revealed = '0';
+      }
+    }, 10000);
+  }
 }
 
 function checkQRLib() {
