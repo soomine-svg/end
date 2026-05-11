@@ -543,6 +543,133 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   line-height: 1.7;
 }
 
+/* ── 遺族向けガイド ── */
+.family-guide .guide-header { background: linear-gradient(135deg, var(--gold-pale), var(--bg3)); }
+.emergency-box {
+  background: var(--red-pale);
+  border: 1px solid #5a1a15;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.emergency-title { font-size: 13px; color: #ffb0a0; font-weight: 600; margin-bottom: 10px; }
+.emergency-list { display: flex; flex-direction: column; gap: 6px; }
+.emergency-item {
+  display: flex; gap: 10px; align-items: center;
+  background: var(--bg2); padding: 8px 10px; border-radius: 4px;
+  font-size: 12px;
+}
+.emergency-item .em-role { color: var(--gold); font-size: 11px; min-width: 70px; }
+.emergency-item .em-name { color: var(--text); flex: 1; }
+.emergency-item .em-tel { color: var(--text-dim); }
+.emergency-item .em-tel a { color: var(--gold-light); text-decoration: none; font-weight: 500; }
+.emergency-edit-btn {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--text-dim);
+  padding: 5px 10px;
+  font-size: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.emergency-edit-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+.flow-timeline {
+  display: flex; flex-direction: column; gap: 14px;
+  margin: 4px 0 20px;
+  position: relative;
+}
+.flow-timeline::before {
+  content: '';
+  position: absolute;
+  left: 22px; top: 24px; bottom: 24px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), var(--border));
+  opacity: 0.3;
+}
+.flow-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+.flow-num {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1.1;
+  box-shadow: 0 0 0 4px var(--bg2);
+}
+.flow-content {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.flow-title { font-size: 13px; color: var(--text); font-weight: 500; margin-bottom: 4px; }
+.flow-title strong { color: var(--gold-light); font-weight: 700; }
+.flow-desc { font-size: 11px; color: var(--text-dim); line-height: 1.7; margin-bottom: 8px; }
+.flow-tasks {
+  list-style: none;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.9;
+  padding-left: 0;
+}
+.flow-tasks li {
+  position: relative;
+  padding-left: 16px;
+}
+.flow-tasks li::before {
+  content: '□';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+.flow-tasks li strong { color: #e08070; }
+.flow-cat-links {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 6px 0;
+}
+.flow-cat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  background: var(--bg2);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.flow-cat-link:hover { border-color: var(--gold); background: var(--gold-pale); }
+.flow-tip {
+  background: var(--blue-pale);
+  border-left: 2px solid var(--blue);
+  padding: 6px 10px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #a0c8e8;
+  line-height: 1.6;
+  border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+  .flow-num { width: 38px; height: 38px; font-size: 8px; }
+  .flow-timeline::before { left: 18px; }
+}
+
 /* ── GUIDE BOX ── */
 .import-section {
   margin-top: 30px;
@@ -608,6 +735,29 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 }
 .pw-qr-wrap { display: none; padding: 14px; border-top: 1px solid var(--border); gap: 16px; align-items: flex-start; flex-wrap: wrap; background: #fff; }
 .pw-qr-wrap.open { display: flex; }
+.pw-print-modes {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 12px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.pw-print-label { font-size: 12px; color: var(--text-dim); }
+.pw-print-btn {
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  padding: 8px 14px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.pw-print-btn:hover { background: var(--gold-pale); border-color: var(--gold); color: var(--gold-light); }
+@media print {
+  .pw-print-modes { display: none !important; }
+}
 .pw-qr-inner { width: 160px; height: 160px; flex-shrink: 0; background: #fff; padding: 8px; border-radius: 4px; }
 .pw-qr-inner img, .pw-qr-inner canvas, .pw-qr-inner svg { display: block; width: 100% !important; height: 100% !important; }
 .pw-qr-text { font-size: 11px; color: #333; line-height: 1.9; flex: 1; min-width: 140px; }
@@ -615,6 +765,118 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 .pw-qr-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .pw-qr-actions button { font-size: 10px; padding: 4px 8px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 3px; cursor: pointer; }
 .pw-qr-actions button:hover { background: var(--gold-pale); border-color: var(--gold); }
+
+/* ── 全画面パスワード表示 ── */
+.pw-fullscreen-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.pw-fullscreen-inner {
+  background: var(--bg2);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 24px 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.pw-fs-close {
+  position: absolute; top: 12px; right: 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+.pw-fs-close:hover { color: var(--gold); border-color: var(--gold); }
+.pw-fs-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 18px;
+  padding-right: 60px;
+}
+.pw-fs-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; letter-spacing: 0.08em; }
+.pw-fs-value {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 14px;
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+  user-select: all;
+}
+.pw-fs-pass { color: var(--gold-light); font-size: 26px; font-weight: 500; }
+.pw-fs-memo { font-size: 14px; font-family: inherit; color: var(--text-dim); }
+.pw-fs-actions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 16px;
+}
+.pw-fs-actions button {
+  flex: 1; min-width: 100px;
+  padding: 12px;
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.pw-fs-actions button:hover { background: var(--gold-pale); border-color: var(--gold); color: var(--gold-light); }
+.pw-fs-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* 1文字ずつ表示モード */
+.pw-char-mode .pw-fs-title { text-align: center; padding-right: 0; }
+.pw-char-progress {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gold);
+  font-family: 'Courier New', monospace;
+  margin-bottom: 14px;
+}
+.pw-char-big {
+  font-family: 'Courier New', monospace;
+  font-size: 120px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-align: center;
+  background: var(--bg3);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 30px 20px;
+  margin: 10px 0;
+  line-height: 1;
+  user-select: all;
+}
+.pw-char-context {
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+.pw-char-context .char-side { opacity: 0.4; }
+.pw-char-context .char-now { color: var(--gold); font-weight: 700; padding: 0 8px; }
+.pw-char-nav button { font-size: 14px; padding: 14px; }
+
+@media (max-width: 480px) {
+  .pw-char-big { font-size: 90px; padding: 24px 10px; }
+  .pw-fs-value { font-size: 18px; }
+  .pw-fs-pass { font-size: 22px; }
+}
 
 /* ── PRINT ── */
 @media print {
@@ -638,17 +900,58 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   .task-meta { color: #666; }
   .cat-header h2 { color: #333; }
   .print-header { display: block !important; }
+
+  /* 緊急連絡先・フロー・ガイドの印刷時表示 */
+  .family-guide { display: block !important; page-break-after: always; }
+  .family-guide .guide-header { background: #f0e8d0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .family-guide .guide-title { color: #b8941f !important; }
+  .family-guide .guide-desc { color: #333 !important; border-bottom-color: #ccc !important; }
+  .emergency-box { background: #fff5f3 !important; border-color: #d4a3a0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .emergency-title { color: #9a2820 !important; }
+  .emergency-item { background: white !important; border: 1px solid #eee; }
+  .emergency-item .em-role { color: #b8941f !important; }
+  .emergency-item .em-name, .emergency-item .em-tel a { color: #000 !important; }
+  .emergency-edit-btn { display: none !important; }
+  .flow-step { break-inside: avoid; }
+  .flow-num { background: #b8941f !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; box-shadow: none !important; }
+  .flow-content { background: #fafafa !important; border-color: #ccc !important; }
+  .flow-title, .flow-title strong { color: #000 !important; }
+  .flow-desc, .flow-tasks { color: #333 !important; }
+  .flow-tasks li::before { color: #b8941f !important; }
+  .flow-cat-links { display: none !important; }
+  .flow-tip { background: #e8f0f8 !important; color: #2a4a6a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .guide-note { background: #fff5f3 !important; color: #9a2820 !important; border-color: #d4a3a0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .dashboard:not(.active) .family-guide { display: none !important; }
+  .import-section, .dash-urgency, .dash-grid, .dash-title { display: none !important; }
+
   /* パスワードタブ印刷 */
   .pw-notice, .pw-card-footer { display: none !important; }
   .pw-list { grid-template-columns: repeat(2, 1fr) !important; }
   .pw-card { border: 1px solid #999; break-inside: avoid; background: white; }
-  .pw-card-header { background: #eee; }
+  .pw-card-header { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pw-service-name, .pw-row-value { color: #000 !important; }
   .pw-row-label { color: #666 !important; }
-  .pw-num-badge { background: #333 !important; color: white !important; }
+  .pw-num-badge { background: #333 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pw-row-value.masked { letter-spacing: normal !important; font-size: 0 !important; }
-  .pw-row-value.masked::before { content: attr(data-real); font-size: 12px; color: #000; }
-  .pw-qr-wrap { display: flex !important; }
+  .pw-row-value.masked::before { content: attr(data-real); font-size: 13px; color: #000; font-family: 'Courier New', monospace; font-weight: 500; }
+
+  /* 印刷モード切替：金庫保管版（QR付き） */
+  body.print-mode-vault .pw-qr-wrap { display: flex !important; }
+  body.print-mode-vault .pw-qr-inner { width: 110px !important; height: 110px !important; }
+  body.print-mode-vault .pw-qr-text { font-size: 10px; }
+  body.print-mode-vault .pw-qr-actions { display: none !important; }
+
+  /* 印刷モード切替：遺族配布版（QRなし・文字大きめ） */
+  body.print-mode-family .pw-qr-wrap { display: none !important; }
+  body.print-mode-family .pw-list { grid-template-columns: 1fr !important; }
+  body.print-mode-family .pw-card-body { padding: 16px 20px; }
+  body.print-mode-family .pw-row { font-size: 15px; margin-bottom: 12px; }
+  body.print-mode-family .pw-row-value, body.print-mode-family .pw-row-value.masked::before { font-size: 16px !important; font-weight: 500; }
+  body.print-mode-family .pw-row-label { font-size: 12px; min-width: 50px; }
+  body.print-mode-family .pw-service-name { font-size: 17px; font-weight: 600; }
+
+  /* デフォルト（モード未指定時）はQR表示 */
+  body:not(.print-mode-family):not(.print-mode-vault) .pw-qr-wrap { display: flex !important; }
 }
 .print-header {
   display: none;
@@ -734,49 +1037,115 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   <div class="dashboard active" id="panel-dash">
     <div class="dash-title">OVERVIEW — 全体の進捗</div>
 
-    <!-- 概要・使い方 -->
-    <div class="guide-box">
+    <!-- 遺族向けスタートガイド -->
+    <div class="guide-box family-guide">
       <div class="guide-header">
-        <span class="guide-icon">📖</span>
+        <span class="guide-icon">🕊️</span>
         <div>
-          <div class="guide-title">このアプリについて</div>
-          <div class="guide-sub">はじめにお読みください</div>
+          <div class="guide-title">ご遺族へ — まずはじめにお読みください</div>
+          <div class="guide-sub">あわてず、順番に進めてください</div>
         </div>
       </div>
       <div class="guide-body">
-        <p class="guide-desc">このアプリは、手続きや連絡が必要なことをまとめた「引き継ぎノート」です。<br>あわてず、一つひとつ確認しながら進めてください。</p>
-        <div class="guide-steps">
-          <div class="guide-step">
-            <div class="guide-step-num">1</div>
-            <div class="guide-step-text">
-              <strong>タブで分野を選ぶ</strong><br>
-              上のタブ（契約・法人・備品・金融・デジタル）から対応したい分野を選んでください。
+        <p class="guide-desc">このアプリは、私が亡くなった後に必要な手続き・連絡先・契約情報をまとめた「引き継ぎノート」です。<br>下の時系列に沿って進めていただければ、漏れなく対応できるようになっています。</p>
+
+        <!-- 緊急連絡先 -->
+        <div class="emergency-box" id="emergency-box">
+          <div class="emergency-title">📞 まず連絡する先</div>
+          <div class="emergency-list" id="emergency-list">
+            <div style="font-size:12px;color:var(--text-faint);padding:8px 0;">「設定」から登録してください</div>
+          </div>
+          <button class="emergency-edit-btn" onclick="openEmergencyEdit()">✏ 連絡先を編集</button>
+        </div>
+
+        <!-- 時系列ステップ -->
+        <div class="flow-timeline">
+          <div class="flow-step" data-stage="72h">
+            <div class="flow-num">STEP<br>1</div>
+            <div class="flow-content">
+              <div class="flow-title">最初の <strong>72時間</strong> でやること</div>
+              <div class="flow-desc">死亡診断書の受け取り、葬儀社への連絡、近親者への訃報、火葬許可申請など。</div>
+              <ul class="flow-tasks">
+                <li>死亡診断書を受け取る（病院または医師）</li>
+                <li>葬儀社へ連絡する（上の緊急連絡先を参照）</li>
+                <li>近親者・勤務先へ訃報を伝える</li>
+                <li>死亡届を市区町村役場へ提出（7日以内・通常は葬儀社が代行）</li>
+                <li>火葬・埋葬許可証を受け取る</li>
+              </ul>
             </div>
           </div>
-          <div class="guide-step">
-            <div class="guide-step-num">2</div>
-            <div class="guide-step-text">
-              <strong>タスクをタップして詳細を確認する</strong><br>
-              各項目をタップすると、手順・連絡先・注意事項が表示されます。連絡先のURLや電話番号はそのままタップして使えます。
+
+          <div class="flow-step" data-stage="2w">
+            <div class="flow-num">STEP<br>2</div>
+            <div class="flow-content">
+              <div class="flow-title"><strong>2週間以内</strong> にやること</div>
+              <div class="flow-desc">役所での各種届出、健康保険・年金の手続き。期限を過ぎると過料が発生する場合があります。</div>
+              <ul class="flow-tasks">
+                <li>世帯主変更届（14日以内・市区町村役場）</li>
+                <li>国民健康保険・後期高齢者医療の資格喪失届</li>
+                <li>介護保険の資格喪失届（該当する場合）</li>
+                <li>年金受給停止の手続き（厚生年金10日以内・国民年金14日以内）</li>
+                <li>住民票の抹消は自動（届出不要）</li>
+              </ul>
             </div>
           </div>
-          <div class="guide-step">
-            <div class="guide-step-num">3</div>
-            <div class="guide-step-text">
-              <strong>完了したらチェックを入れる</strong><br>
-              左のチェックボックスをタップすると完了になります。この画面の進捗バーに自動で反映されます。
+
+          <div class="flow-step" data-stage="contracts">
+            <div class="flow-num">STEP<br>3</div>
+            <div class="flow-content">
+              <div class="flow-title">契約・口座の停止</div>
+              <div class="flow-desc">契約中のサービス・銀行口座・カードを停止していきます。<br>下の各タブから一つずつチェックしながら進めてください。</div>
+              <div class="flow-cat-links">
+                <a class="flow-cat-link" onclick="switchTabById(0)"><span>💳</span> 契約・サブスク</a>
+                <a class="flow-cat-link" onclick="switchTabById(3)"><span>🏦</span> 金融・保険</a>
+                <a class="flow-cat-link" onclick="switchTabById('pw')"><span>🔑</span> パスワード一覧</a>
+              </div>
+              <div class="flow-tip">💡 銀行口座は死亡の事実が伝わると凍結されます。光熱費の引落口座は最後に連絡するのが現実的です。</div>
             </div>
           </div>
-          <div class="guide-step">
-            <div class="guide-step-num">4</div>
-            <div class="guide-step-text">
-              <strong>ID・パスワードは別紙を確認</strong><br>
-              ログインが必要な手続きは「デジタル情報保管ノート（別紙）」にまとめてあります。
+
+          <div class="flow-step" data-stage="digital">
+            <div class="flow-num">STEP<br>4</div>
+            <div class="flow-content">
+              <div class="flow-title">デジタル資産・SNS整理</div>
+              <div class="flow-desc">スマホ・メール・SNS・サブスク動画など、デジタル領域の整理です。<br>SNSは「追悼アカウント化」「削除」の選択が必要です。</div>
+              <div class="flow-cat-links">
+                <a class="flow-cat-link" onclick="switchTabById(4)"><span>🌐</span> デジタル資産</a>
+                <a class="flow-cat-link" onclick="switchTabById(2)"><span>📦</span> 備品・返却</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step" data-stage="business">
+            <div class="flow-num">STEP<br>5</div>
+            <div class="flow-content">
+              <div class="flow-title">法人・事業の整理</div>
+              <div class="flow-desc">会社（H.P.canvas株式会社）の解散・清算、または事業承継の手続きです。<br>税理士・司法書士への相談を推奨します。</div>
+              <div class="flow-cat-links">
+                <a class="flow-cat-link" onclick="switchTabById(1)"><span>🏢</span> 法人・事業</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step" data-stage="inherit">
+            <div class="flow-num">STEP<br>6</div>
+            <div class="flow-content">
+              <div class="flow-title">相続の主な期限</div>
+              <div class="flow-desc">相続関連は期限が長めですが、放っておくと不利益になるものがあります。</div>
+              <ul class="flow-tasks">
+                <li><strong>3ヶ月以内</strong>：相続放棄・限定承認の判断（家庭裁判所）</li>
+                <li><strong>4ヶ月以内</strong>：故人の所得税の準確定申告</li>
+                <li><strong>10ヶ月以内</strong>：相続税の申告・納付</li>
+                <li><strong>1年以内</strong>：遺留分侵害額請求の時効</li>
+              </ul>
+              <div class="flow-tip">💡 不動産・預貯金が一定額を超える場合、税理士への早めの相談を推奨します。</div>
             </div>
           </div>
         </div>
+
         <div class="guide-note">
-          🔴 優先度「高」のタスクから順に対応いただけると助かります。急ぎでないものは後回しで構いません。
+          🔴 各タブの優先度「高」のタスクを上から順に対応していただければ大丈夫です。<br>
+          わからないことがあれば、緊急連絡先に登録した相手にご相談ください。
         </div>
       </div>
     </div>
@@ -920,6 +1289,11 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
     <div class="pw-notice">
       🔒 画面上はパスワードを伏字表示しています。<strong>印刷時のみ実値が表示されます。</strong>印刷後は紙を封筒または金庫で保管してください。
     </div>
+    <div class="pw-print-modes">
+      <span class="pw-print-label">🖨 印刷モード：</span>
+      <button class="pw-print-btn" onclick="printPw('family')">👨‍👩‍👧 遺族配布版（QRなし・文字大）</button>
+      <button class="pw-print-btn" onclick="printPw('vault')">🔒 金庫保管版（QRあり）</button>
+    </div>
     <div class="pw-list" id="pw-list"></div>
     <div class="empty-cat" id="empty-pw">
       <div class="empty-cat-icon">🔑</div>
@@ -1026,8 +1400,10 @@ async function load() {
     if (!res.ok) throw new Error('not found');
     data = await res.json();
     if (!data.tasks) data.tasks = [];
+    if (!data.emergency) data.emergency = [];
+    if (!data.passwords) data.passwords = [];
   } catch(e) {
-    data = { tasks: [] };
+    data = { tasks: [], emergency: [], passwords: [] };
   }
   renderAll();
 }
@@ -1047,13 +1423,21 @@ function switchTab(id, el) {
   document.querySelectorAll('.dashboard,.cat-panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function switchTabById(catIdx) {
+function switchTabById(target) {
   const tabs = document.querySelectorAll('.tab');
   tabs.forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.dashboard,.cat-panel').forEach(p => p.classList.remove('active'));
-  tabs[catIdx + 1].classList.add('active');
-  document.getElementById('panel-cat' + catIdx).classList.add('active');
+  if (target === 'pw') {
+    tabs[6].classList.add('active');
+    document.getElementById('panel-pw').classList.add('active');
+  } else {
+    const catIdx = Number(target);
+    tabs[catIdx + 1].classList.add('active');
+    document.getElementById('panel-cat' + catIdx).classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ── RENDER ──
@@ -1062,6 +1446,7 @@ function renderAll() {
   renderDashboard();
   renderProgress();
   renderPasswords();
+  renderEmergency();
 }
 
 function renderCat(c) {
@@ -1396,6 +1781,9 @@ function renderPasswords() {
           ${p.memo ? `備考: ${esc(p.memo)}` : ''}
           <div class="pw-qr-actions">
             <button onclick="copyPwToClipboard('${p.id}','all')">📋 全情報コピー</button>
+            <button onclick="showFullscreenPw('${p.id}')">🔍 拡大表示</button>
+            <button onclick="showCharByChar('${p.id}')">🔢 1文字ずつ</button>
+            <button onclick="speakPw('${p.id}')">🔊 読み上げ</button>
             <button onclick="downloadQrPng('${p.id}')">💾 PNG保存</button>
           </div>
         </div>
@@ -1403,6 +1791,185 @@ function renderPasswords() {
     `;
     list.appendChild(card);
   });
+}
+
+// ── 緊急連絡先 ──
+function renderEmergency() {
+  const list = document.getElementById('emergency-list');
+  if (!list) return;
+  const items = data.emergency || [];
+  if (items.length === 0) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--text-faint);padding:8px 0;">「連絡先を編集」から登録してください</div>';
+    return;
+  }
+  list.innerHTML = items.map(e => `
+    <div class="emergency-item">
+      <span class="em-role">${esc(e.role || '連絡先')}</span>
+      <span class="em-name">${esc(e.name || '')}</span>
+      <span class="em-tel">${e.tel ? `<a href="tel:${esc(e.tel)}">${esc(e.tel)}</a>` : ''}</span>
+    </div>
+  `).join('');
+}
+
+function openEmergencyEdit() {
+  const items = data.emergency || [];
+  const current = items.map(e => `${e.role || ''}|${e.name || ''}|${e.tel || ''}`).join('\n');
+  const msg = '緊急連絡先を編集します。\n1行に1件、「役割|名前|電話番号」の形式で入力してください。\n\n例：\n葬儀社|◯◯セレモニーホール|099-xxx-xxxx\n税理士|△△税理士事務所|0986-xx-xxxx\n長男|山田太郎|090-xxxx-xxxx';
+  const result = prompt(msg, current);
+  if (result === null) return;
+  const newItems = result.split('\n').map(line => {
+    const parts = line.split('|').map(s => s.trim());
+    if (!parts[0] && !parts[1] && !parts[2]) return null;
+    return { role: parts[0] || '', name: parts[1] || '', tel: parts[2] || '' };
+  }).filter(Boolean);
+  data.emergency = newItems;
+  renderEmergency();
+  showToast('💾 連絡先を更新しました。「↓ 保存」でJSON出力してください');
+}
+
+// ── パスワード補助表示機能 ──
+// 全画面拡大表示
+function showFullscreenPw(id) {
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'pw-fullscreen-overlay';
+  overlay.onclick = () => overlay.remove();
+  overlay.innerHTML = `
+    <div class="pw-fullscreen-inner" onclick="event.stopPropagation()">
+      <div class="pw-fs-close" onclick="this.closest('.pw-fullscreen-overlay').remove()">✕ 閉じる</div>
+      <div class="pw-fs-title">🔑 #${esc(p.num || '?')} ${esc(p.name)}</div>
+      ${p.id_val ? `<div class="pw-fs-label">ID</div><div class="pw-fs-value">${esc(p.id_val)}</div>` : ''}
+      ${p.pass ? `<div class="pw-fs-label">パスワード</div><div class="pw-fs-value pw-fs-pass">${esc(p.pass)}</div>` : ''}
+      ${p.memo ? `<div class="pw-fs-label">備考</div><div class="pw-fs-value pw-fs-memo">${esc(p.memo)}</div>` : ''}
+      <div class="pw-fs-actions">
+        <button onclick="copyPwToClipboard('${p.id}','pass')">📋 PWコピー</button>
+        <button onclick="showCharByChar('${p.id}'); this.closest('.pw-fullscreen-overlay').remove();">🔢 1文字ずつ</button>
+        <button onclick="speakPw('${p.id}')">🔊 読み上げ</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// 1文字ずつ表示
+function showCharByChar(id) {
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p || !p.pass) { alert('パスワードが設定されていません'); return; }
+  const chars = Array.from(p.pass);
+  let idx = 0;
+  const overlay = document.createElement('div');
+  overlay.className = 'pw-fullscreen-overlay';
+  overlay.innerHTML = `
+    <div class="pw-fullscreen-inner pw-char-mode" onclick="event.stopPropagation()">
+      <div class="pw-fs-close" onclick="this.closest('.pw-fullscreen-overlay').remove()">✕ 閉じる</div>
+      <div class="pw-fs-title">🔢 #${esc(p.num || '?')} ${esc(p.name)}</div>
+      <div class="pw-char-progress" id="char-progress-${id}">1 / ${chars.length}</div>
+      <div class="pw-char-big" id="char-big-${id}">${esc(chars[0])}</div>
+      <div class="pw-char-context" id="char-context-${id}"></div>
+      <div class="pw-fs-actions pw-char-nav">
+        <button id="char-prev-${id}" disabled>← 前へ</button>
+        <button id="char-next-${id}">次へ →</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:14px;text-align:center;">紙に書き写しながら進めてください</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  const big = document.getElementById('char-big-' + id);
+  const ctx = document.getElementById('char-context-' + id);
+  const prog = document.getElementById('char-progress-' + id);
+  const prev = document.getElementById('char-prev-' + id);
+  const next = document.getElementById('char-next-' + id);
+  function update() {
+    big.textContent = chars[idx];
+    big.dataset.char = chars[idx];
+    // 前後の文脈表示
+    const before = chars.slice(Math.max(0, idx - 3), idx).join('');
+    const after = chars.slice(idx + 1, idx + 4).join('');
+    ctx.innerHTML = `<span class="char-side">${esc(before)}</span><span class="char-now">${esc(chars[idx])}</span><span class="char-side">${esc(after)}</span>`;
+    prog.textContent = `${idx + 1} / ${chars.length}`;
+    prev.disabled = idx === 0;
+    next.textContent = idx === chars.length - 1 ? '✓ 完了' : '次へ →';
+  }
+  prev.onclick = () => { if (idx > 0) { idx--; update(); } };
+  next.onclick = () => {
+    if (idx < chars.length - 1) { idx++; update(); }
+    else overlay.remove();
+  };
+  update();
+}
+
+// 音声読み上げ
+function speakPw(id) {
+  const p = (data.passwords || []).find(x => x.id === id);
+  if (!p || !p.pass) { alert('パスワードが設定されていません'); return; }
+  if (!('speechSynthesis' in window)) {
+    alert('お使いの環境は音声読み上げに対応していません');
+    return;
+  }
+  // 既存の読み上げを停止
+  window.speechSynthesis.cancel();
+  // 1文字ずつ読み上げ（記号は名称で）
+  const charMap = {
+    '@':'アットマーク','.':'ドット',',':'カンマ','_':'アンダースコア','-':'ハイフン','/':'スラッシュ',
+    '\\':'バックスラッシュ',':':'コロン',';':'セミコロン','!':'びっくりマーク','?':'はてなマーク',
+    '#':'シャープ','$':'ドル','%':'パーセント','&':'アンド','*':'アスタリスク','+':'プラス',
+    '=':'イコール','(':'カッコ開く',')':'カッコ閉じる','[':'カギカッコ開く',']':'カギカッコ閉じる',
+    '{':'波カッコ開く','}':'波カッコ閉じる','<':'小なり','>':'大なり','"':'ダブルクォート',
+    "'":'シングルクォート','`':'バッククォート','|':'パイプ','^':'ハット','~':'チルダ',' ':'スペース'
+  };
+  const chars = Array.from(p.pass);
+  const text = chars.map(c => {
+    if (charMap[c]) return charMap[c];
+    if (/[A-Z]/.test(c)) return '大文字の' + c;
+    if (/[a-z]/.test(c)) return '小文字の' + c;
+    return c;
+  }).join('、');
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ja-JP';
+  u.rate = 0.7;
+  window.speechSynthesis.speak(u);
+  showToast('🔊 読み上げ中（タップで停止）');
+  // 画面タップで停止
+  const stopHandler = () => {
+    window.speechSynthesis.cancel();
+    document.removeEventListener('click', stopHandler);
+  };
+  setTimeout(() => document.addEventListener('click', stopHandler, { once: true }), 500);
+}
+
+// 印刷モード切替（パスワード一覧）
+function printPw(mode) {
+  // 全パスワードカードのQRを事前生成（金庫保管版のみ）
+  if (mode === 'vault') {
+    if (typeof QRCode === 'undefined') {
+      alert('QRライブラリの読み込みに失敗しました。ページを再読み込みしてください。');
+      return;
+    }
+    (data.passwords || []).forEach(p => {
+      const wrap = document.getElementById('pwqr-' + p.id);
+      const canvas = document.getElementById('pwqr-canvas-' + p.id);
+      if (!wrap || !canvas) return;
+      canvas.innerHTML = '';
+      const qrText = [
+        '#' + (p.num || '?') + ' ' + p.name,
+        p.id_val ? 'ID: ' + p.id_val : '',
+        p.pass ? 'PW: ' + p.pass : '',
+        p.memo ? '備考: ' + p.memo : ''
+      ].filter(Boolean).join('\n');
+      try {
+        new QRCode(canvas, { text: qrText, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
+      } catch (e) { console.error(e); }
+    });
+  }
+  document.body.classList.remove('print-mode-family', 'print-mode-vault');
+  document.body.classList.add('print-mode-' + mode);
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove('print-mode-family', 'print-mode-vault');
+    }, 500);
+  }, 300);
 }
 
 // QRコードをPNGとしてダウンロード（紙保管用）
