@@ -925,7 +925,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   .import-section, .dash-urgency, .dash-grid, .dash-title { display: none !important; }
 
   /* パスワードタブ印刷 */
-  .pw-notice, .pw-card-footer { display: none !important; }
+  .pw-notice, .pw-card-footer, .pw-qr-actions { display: none !important; }
   .pw-list { grid-template-columns: repeat(2, 1fr) !important; }
   .pw-card { border: 1px solid #999; break-inside: avoid; background: white; }
   .pw-card-header { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -939,7 +939,6 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   body.print-mode-vault .pw-qr-wrap { display: flex !important; }
   body.print-mode-vault .pw-qr-inner { width: 110px !important; height: 110px !important; }
   body.print-mode-vault .pw-qr-text { font-size: 10px; }
-  body.print-mode-vault .pw-qr-actions { display: none !important; }
 
   /* 印刷モード切替：遺族配布版（QRなし・文字大きめ） */
   body.print-mode-family .pw-qr-wrap { display: none !important; }
@@ -950,8 +949,9 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
   body.print-mode-family .pw-row-label { font-size: 12px; min-width: 50px; }
   body.print-mode-family .pw-service-name { font-size: 17px; font-weight: 600; }
 
-  /* デフォルト（モード未指定時）はQR表示 */
-  body:not(.print-mode-family):not(.print-mode-vault) .pw-qr-wrap { display: flex !important; }
+  /* デフォルト（モード未指定時）は現在表示中のQRのみ印刷 */
+  body:not(.print-mode-family):not(.print-mode-vault) .pw-qr-wrap.open { display: flex !important; }
+  body:not(.print-mode-family):not(.print-mode-vault) .pw-qr-wrap:not(.open) { display: none !important; }
 }
 .print-header {
   display: none;
@@ -1767,9 +1767,12 @@ function renderPasswords() {
         ${p.memo ? `<div class="pw-row"><span class="pw-row-label">備考</span><span class="pw-row-value">${esc(p.memo)}</span></div>` : ''}
       </div>
       <div class="pw-card-footer">
-        <button class="det-btn" onclick="togglePwQr('${p.id}')">📱 QR</button>
         ${p.pass ? `<button class="det-btn" onclick="togglePwReveal('${p.id}')">👁 表示</button>` : ''}
         ${p.pass ? `<button class="det-btn" onclick="copyPwToClipboard('${p.id}','pass')">📋 PW</button>` : ''}
+        ${p.pass ? `<button class="det-btn" onclick="showFullscreenPw('${p.id}')">🔍 拡大</button>` : ''}
+        ${p.pass ? `<button class="det-btn" onclick="showCharByChar('${p.id}')">🔢 1文字ずつ</button>` : ''}
+        ${p.pass ? `<button class="det-btn" onclick="speakPw('${p.id}')">🔊 読上</button>` : ''}
+        <button class="det-btn" onclick="togglePwQr('${p.id}')">📱 QR</button>
         <button class="det-btn" onclick="openEditPw('${p.id}')">✏ 編集</button>
       </div>
       <div class="pw-qr-wrap" id="pwqr-${p.id}">
@@ -1781,9 +1784,6 @@ function renderPasswords() {
           ${p.memo ? `備考: ${esc(p.memo)}` : ''}
           <div class="pw-qr-actions">
             <button onclick="copyPwToClipboard('${p.id}','all')">📋 全情報コピー</button>
-            <button onclick="showFullscreenPw('${p.id}')">🔍 拡大表示</button>
-            <button onclick="showCharByChar('${p.id}')">🔢 1文字ずつ</button>
-            <button onclick="speakPw('${p.id}')">🔊 読み上げ</button>
             <button onclick="downloadQrPng('${p.id}')">💾 PNG保存</button>
           </div>
         </div>
@@ -1940,28 +1940,48 @@ function speakPw(id) {
 
 // 印刷モード切替（パスワード一覧）
 function printPw(mode) {
-  // 全パスワードカードのQRを事前生成（金庫保管版のみ）
   if (mode === 'vault') {
     if (typeof QRCode === 'undefined') {
       alert('QRライブラリの読み込みに失敗しました。ページを再読み込みしてください。');
       return;
     }
+    // QR表示エリアを先に全部openにする（サイズを確保）
     (data.passwords || []).forEach(p => {
       const wrap = document.getElementById('pwqr-' + p.id);
-      const canvas = document.getElementById('pwqr-canvas-' + p.id);
-      if (!wrap || !canvas) return;
-      canvas.innerHTML = '';
-      const qrText = [
-        '#' + (p.num || '?') + ' ' + p.name,
-        p.id_val ? 'ID: ' + p.id_val : '',
-        p.pass ? 'PW: ' + p.pass : '',
-        p.memo ? '備考: ' + p.memo : ''
-      ].filter(Boolean).join('\n');
-      try {
-        new QRCode(canvas, { text: qrText, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
-      } catch (e) { console.error(e); }
+      if (wrap) wrap.classList.add('open');
     });
+    // DOM反映後にQR描画
+    setTimeout(() => {
+      (data.passwords || []).forEach(p => {
+        const canvas = document.getElementById('pwqr-canvas-' + p.id);
+        if (!canvas) return;
+        canvas.innerHTML = '';
+        const qrText = [
+          '#' + (p.num || '?') + ' ' + p.name,
+          p.id_val ? 'ID: ' + p.id_val : '',
+          p.pass ? 'PW: ' + p.pass : '',
+          p.memo ? '備考: ' + p.memo : ''
+        ].filter(Boolean).join('\n');
+        try {
+          new QRCode(canvas, {
+            text: qrText, width: 160, height: 160,
+            colorDark: '#000000', colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        } catch (e) { console.error(e); }
+      });
+      document.body.classList.remove('print-mode-family', 'print-mode-vault');
+      document.body.classList.add('print-mode-vault');
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+          document.body.classList.remove('print-mode-family', 'print-mode-vault');
+        }, 500);
+      }, 400);
+    }, 100);
+    return;
   }
+  // 遺族配布版（QRなし）
   document.body.classList.remove('print-mode-family', 'print-mode-vault');
   document.body.classList.add('print-mode-' + mode);
   setTimeout(() => {
@@ -1969,7 +1989,7 @@ function printPw(mode) {
     setTimeout(() => {
       document.body.classList.remove('print-mode-family', 'print-mode-vault');
     }, 500);
-  }, 300);
+  }, 200);
 }
 
 // QRコードをPNGとしてダウンロード（紙保管用）
@@ -2032,7 +2052,6 @@ function togglePwQr(id) {
   }
   const p = (data.passwords || []).find(x => x.id === id);
   if (!p) return;
-  // QRライブラリ未読込チェック
   if (typeof QRCode === 'undefined') {
     alert('QRライブラリの読み込みに失敗しました。ページを再読み込みしてください。');
     return;
@@ -2044,13 +2063,35 @@ function togglePwQr(id) {
     p.pass ? 'PW: ' + p.pass : '',
     p.memo ? '備考: ' + p.memo : ''
   ].filter(Boolean).join('\n');
-  try {
-    new QRCode(canvas, { text: qrText, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
-    wrap.classList.add('open');
-  } catch (e) {
-    alert('QRコード生成に失敗しました: ' + e.message);
-    console.error(e);
-  }
+  // 先にwrapを開く（canvasにサイズが付かないとQR描画が0pxで失敗する）
+  wrap.classList.add('open');
+  // 描画はDOM反映後に
+  setTimeout(() => {
+    try {
+      new QRCode(canvas, {
+        text: qrText,
+        width: 160,
+        height: 160,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      // 描画後にサイズ確認、失敗していたら再生成
+      setTimeout(() => {
+        const img = canvas.querySelector('img');
+        const cv = canvas.querySelector('canvas');
+        const svg = canvas.querySelector('svg');
+        const hasOutput = (img && img.naturalWidth > 0) || (cv && cv.width > 0) || svg;
+        if (!hasOutput) {
+          // 完全に失敗 → テキスト代替
+          canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#666;text-align:center;line-height:1.6;">QRコード生成に<br>失敗しました<br><br>「全情報コピー」で<br>テキストとして<br>取得できます</div>';
+        }
+      }, 200);
+    } catch (e) {
+      console.error('QR error:', e);
+      canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#c33;text-align:center;line-height:1.6;">QRコード生成エラー<br>' + esc(e.message) + '</div>';
+    }
+  }, 50);
 }
 
 // パスワードをクリップボードへコピー
