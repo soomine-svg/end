@@ -758,7 +758,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 @media print {
   .pw-print-modes { display: none !important; }
 }
-.pw-qr-inner { width: 160px; height: 160px; flex-shrink: 0; background: #fff; padding: 8px; border-radius: 4px; }
+.pw-qr-inner { width: 200px; height: 200px; flex-shrink: 0; background: #fff; padding: 8px; border-radius: 4px; }
 .pw-qr-inner img, .pw-qr-inner canvas, .pw-qr-inner svg { display: block; width: 100% !important; height: 100% !important; }
 .pw-qr-text { font-size: 11px; color: #333; line-height: 1.9; flex: 1; min-width: 140px; }
 .pw-qr-text strong { color: #b8941f !important; }
@@ -937,7 +937,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 80px; }
 
   /* 印刷モード切替：金庫保管版（QR付き） */
   body.print-mode-vault .pw-qr-wrap { display: flex !important; }
-  body.print-mode-vault .pw-qr-inner { width: 110px !important; height: 110px !important; }
+  body.print-mode-vault .pw-qr-inner { width: 130px !important; height: 130px !important; }
   body.print-mode-vault .pw-qr-text { font-size: 10px; }
 
   /* 印刷モード切替：遺族配布版（QRなし・文字大きめ） */
@@ -1962,13 +1962,33 @@ function printPw(mode) {
           p.pass ? 'PW: ' + p.pass : '',
           p.memo ? '備考: ' + p.memo : ''
         ].filter(Boolean).join('\n');
+        const dataLen = qrText.length;
+        let typeNumber, correctLevel;
+        if (dataLen < 50) { typeNumber = 4; correctLevel = QRCode.CorrectLevel.M; }
+        else if (dataLen < 100) { typeNumber = 10; correctLevel = QRCode.CorrectLevel.M; }
+        else if (dataLen < 200) { typeNumber = 15; correctLevel = QRCode.CorrectLevel.L; }
+        else if (dataLen < 400) { typeNumber = 25; correctLevel = QRCode.CorrectLevel.L; }
+        else { typeNumber = 40; correctLevel = QRCode.CorrectLevel.L; }
         try {
           new QRCode(canvas, {
-            text: qrText, width: 160, height: 160,
+            text: qrText, width: 200, height: 200,
+            typeNumber: typeNumber,
             colorDark: '#000000', colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M
+            correctLevel: correctLevel
           });
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+          // データ過大時は最小情報でリトライ
+          try {
+            canvas.innerHTML = '';
+            new QRCode(canvas, {
+              text: (p.pass || '') + (p.id_val ? '\nID: ' + p.id_val : ''),
+              width: 200, height: 200, typeNumber: 40,
+              colorDark: '#000000', colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.L
+            });
+          } catch (e2) { console.error('retry failed:', e2); }
+        }
       });
       document.body.classList.remove('print-mode-family', 'print-mode-vault');
       document.body.classList.add('print-mode-vault');
@@ -2063,33 +2083,62 @@ function togglePwQr(id) {
     p.pass ? 'PW: ' + p.pass : '',
     p.memo ? '備考: ' + p.memo : ''
   ].filter(Boolean).join('\n');
-  // 先にwrapを開く（canvasにサイズが付かないとQR描画が0pxで失敗する）
   wrap.classList.add('open');
-  // 描画はDOM反映後に
   setTimeout(() => {
+    // データ長に応じてversion(typeNumber)とerror correction levelを動的に調整
+    // 訂正レベル: L(7%)→M(15%)→Q(25%)→H(30%) ※下げるほど多くのデータを格納可能
+    const dataLen = qrText.length;
+    let typeNumber, correctLevel;
+    if (dataLen < 50) {
+      typeNumber = 4; correctLevel = QRCode.CorrectLevel.M;
+    } else if (dataLen < 100) {
+      typeNumber = 10; correctLevel = QRCode.CorrectLevel.M;
+    } else if (dataLen < 200) {
+      typeNumber = 15; correctLevel = QRCode.CorrectLevel.L;
+    } else if (dataLen < 400) {
+      typeNumber = 25; correctLevel = QRCode.CorrectLevel.L;
+    } else {
+      typeNumber = 40; correctLevel = QRCode.CorrectLevel.L;
+    }
     try {
       new QRCode(canvas, {
         text: qrText,
-        width: 160,
-        height: 160,
+        width: 200,
+        height: 200,
+        typeNumber: typeNumber,
         colorDark: '#000000',
         colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
+        correctLevel: correctLevel
       });
-      // 描画後にサイズ確認、失敗していたら再生成
       setTimeout(() => {
         const img = canvas.querySelector('img');
         const cv = canvas.querySelector('canvas');
         const svg = canvas.querySelector('svg');
         const hasOutput = (img && img.naturalWidth > 0) || (cv && cv.width > 0) || svg;
         if (!hasOutput) {
-          // 完全に失敗 → テキスト代替
           canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#666;text-align:center;line-height:1.6;">QRコード生成に<br>失敗しました<br><br>「全情報コピー」で<br>テキストとして<br>取得できます</div>';
         }
       }, 200);
     } catch (e) {
       console.error('QR error:', e);
-      canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#c33;text-align:center;line-height:1.6;">QRコード生成エラー<br>' + esc(e.message) + '</div>';
+      // データが大きすぎる場合は最小限の情報だけでリトライ
+      if (e.message && e.message.indexOf('overflow') >= 0) {
+        try {
+          canvas.innerHTML = '';
+          const minText = (p.pass || '') + (p.id_val ? '\nID: ' + p.id_val : '');
+          new QRCode(canvas, {
+            text: minText,
+            width: 200, height: 200,
+            typeNumber: 40,
+            colorDark: '#000000', colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.L
+          });
+        } catch (e2) {
+          canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#c33;text-align:center;line-height:1.6;">パスワードが長すぎて<br>QRコード化できません<br><br>「全情報コピー」または<br>「1文字ずつ」を<br>ご利用ください</div>';
+        }
+      } else {
+        canvas.innerHTML = '<div style="padding:20px;font-size:11px;color:#c33;text-align:center;line-height:1.6;">QRコード生成エラー<br>' + esc(e.message) + '</div>';
+      }
     }
   }, 50);
 }
